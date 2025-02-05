@@ -1,11 +1,13 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 #include <memory>
 #include <typeindex>
 #include <unordered_map>
+#include <vector>
 
 #include "engine/component.hh"
 
@@ -16,7 +18,7 @@ namespace engine::detail {
 class homogeneous_component_registry {
 
 public:
-    virtual void remove(uint64_t idx) = 0;
+    virtual void remove(void* addr) = 0;
 
     virtual void update_all() = 0;
     virtual void action_all() = 0;
@@ -31,17 +33,20 @@ class homogeneous_component_registry_impl: public homogeneous_component_registry
 
 public:
 
-    uint64_t add(std::shared_ptr<Component> cmpt) {
+    void add(std::shared_ptr<Component> cmpt) {
         if(cmpt == nullptr) {
             throw std::runtime_error("Cannot register null component");
         }
-        last_idx++;
-        _components.insert({last_idx, cmpt});
-        return last_idx;
+        const auto it = std::find(_components.begin(), _components.end(), cmpt);
+        if(it == _components.end()) {
+            _components.push_back(cmpt);
+        }
     }
 
-    void remove(uint64_t idx) override {
-        auto it = _components.find(idx);
+    void remove(void* addr) override {
+        auto it = std::find_if(_components.begin(), _components.end(), [addr](const std::shared_ptr<Component>& cmpt) {
+            return addr == static_cast<void*>(cmpt.get());
+        });
         if(it != _components.end()) {
             _components.erase(it);
         }
@@ -49,61 +54,37 @@ public:
 
     void update_all() override {
         if constexpr(updatable<Component>) {
-            for(auto& e: _components) {
-                e.second->update();
-            }
+            std::for_each(_components.begin(), _components.end(), [](std::shared_ptr<Component>& cmpt) {
+                cmpt->update();
+            });
         }
     }
 
     void action_all() override {
         if constexpr(actionable<Component>) {
-            for(auto& e: _components) {
-                e.second->action();
-            }
+            std::for_each(_components.begin(), _components.end(), [](std::shared_ptr<Component>& cmpt) {
+                cmpt->action();
+            });
         }
     }
 
     virtual ~homogeneous_component_registry_impl() = default;
 
 private:
-    static uint64_t last_idx;
-    std::unordered_map<uint64_t, std::shared_ptr<Component>> _components;
+    std::vector<std::shared_ptr<Component>> _components;
 
 };
-
-template <component Component>
-uint64_t homogeneous_component_registry_impl<Component>::last_idx = 0;
 
 } // namespace engine::detail
 
 
 namespace engine {
 
-class component_index {
-
-public:
-    template <component Component>
-    static component_index make_idx(uint64_t registry_idx) {
-        return component_index(std::type_index(typeid(Component)), registry_idx);
-    }
-
-    const std::type_index& type_idx() const { return _type_idx; };
-    uint64_t registry_idx() const { return _registry_idx; }
-
-private:
-    component_index(std::type_index tidx, uint64_t ridx): _type_idx(tidx), _registry_idx(ridx) {}
-
-    const std::type_index _type_idx;
-    const uint64_t _registry_idx;
-
-};
-
-
 class component_registry {
 
 public:
     template <component Component>
-    component_index add(std::shared_ptr<Component> cmpt) {
+    void add(std::shared_ptr<Component> cmpt) {
         using sub_registry_impl = detail::homogeneous_component_registry_impl<Component>;
         const std::type_index tidx = std::type_index(typeid(Component));
         std::shared_ptr<sub_registry_impl> sub_registry = nullptr;
@@ -115,16 +96,17 @@ public:
             sub_registry = std::make_shared<sub_registry_impl>();
             _sub_registries.insert({tidx, sub_registry});
         }
-        const uint64_t registry_idx = sub_registry->add(cmpt);
-        return component_index::make_idx<Component>(registry_idx);
+        sub_registry->add(cmpt);
     }
 
-    void remove(const component_index& idx) {
-        auto it = _sub_registries.find(idx.type_idx());
+    template <component Component>
+    void remove(std::shared_ptr<Component> cmpt) {
+        const std::type_index tidx = std::type_index(typeid(Component));
+        auto it = _sub_registries.find(tidx);
         if(it == _sub_registries.end()) {
             return;
         }
-        it->second->remove(idx.registry_idx());
+        it->second->remove(static_cast<void*>(cmpt.get()));
     }
 
     void update_all() {

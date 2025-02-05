@@ -28,19 +28,20 @@ int main() {
     std::shared_ptr<component_waf> waf = std::make_shared<component_waf>();
     std::shared_ptr<component_woof> woof = std::make_shared<component_woof>();
 
-    const engine::component_index wif_idx = registry.add(wif);
-    const engine::component_index waf_idx = registry.add(waf);
+    registry.add(wif);
+    registry.add(waf);
     registry.update_all();
     registry.action_all();
     std::cout << "============================" << std::endl;
 
-    std::ignore = registry.add(woof);
+    registry.add(woof);
+    registry.add(wif); // Does nothing because this address is already in the registry
     registry.update_all();
     registry.action_all();
     std::cout << "============================" << std::endl;
 
-    registry.remove(wif_idx);
-    registry.remove(waf_idx);
+    registry.remove(wif);
+    registry.remove(waf);
     registry.update_all();
     registry.action_all();
     std::cout << "============================" << std::endl;
