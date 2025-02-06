@@ -2,26 +2,57 @@
 #include <iostream>
 
 #include <engine/registry.hh>
+#include <engine/entity.hh>
 
+using entity_ptr = std::shared_ptr<engine::entity>;
 
-class component_wif {
+class base_component {
+private:
+    entity_ptr _entity;
+protected:
+    base_component(entity_ptr entity) : _entity(entity) {}
+    ~base_component() = default;
 public:
-    void update() { std::cout << "WIF update" << std::endl; }
+    entity_ptr get_entity() { return _entity; }
 };
 
-class component_waf {
+class component_waf : public base_component {
 public:
+    component_waf(entity_ptr entity) : base_component(entity) {}
     void action() { std::cout << "WAF action" << std::endl; }
 };
 
-class component_woof {
+class component_woof : public base_component {
 public:
+    component_woof(entity_ptr entity) : base_component(entity) {}
     void update() { std::cout << "WOOF update" << std::endl; }
     void action() { std::cout << "WOOF action" << std::endl; }
 };
 
+class component_pos : public base_component {
+public:
+    float x, y;
+    explicit component_pos(entity_ptr entity) : base_component(entity), x(0), y(0) {}
+    explicit component_pos(entity_ptr entity, float x, float y) : base_component(entity), x(x), y(y) {}
+    void update() {
+        x += 3;
+        y -= 1;
+    }
+};
 
-int main() {
+class component_wif : public base_component {
+public:
+    component_wif(entity_ptr entity) : base_component(entity) {}
+    void action() {
+        auto pos = get_entity()->get_component<component_pos>();
+        if(pos) {
+            std::cout << "WIF update. pos is = (" << pos->x << ", " << pos->y << ")." << std::endl;
+        }
+    }
+};
+
+/*
+void test_1() {
     engine::component_registry registry;
 
     std::shared_ptr<component_wif> wif = std::make_shared<component_wif>();
@@ -45,5 +76,29 @@ int main() {
     registry.update_all();
     registry.action_all();
     std::cout << "============================" << std::endl;
+}*/
 
+void test_2() {
+    engine::component_registry registry;
+    entity_ptr object = std::make_shared<engine::entity>();
+
+    std::shared_ptr<component_wif> wif = std::make_shared<component_wif>(object);
+    std::shared_ptr<component_pos> pos = std::make_shared<component_pos>(object, 69, 42);
+    registry.add(wif);
+    object->register_component(wif);
+    registry.add(pos);
+    object->register_component(pos);
+
+
+
+    registry.update_all();
+    registry.action_all();
+    std::cout << "============================" << std::endl;
+    registry.update_all();
+    registry.action_all();
+    std::cout << "============================" << std::endl;
+}
+
+int main() {
+    test_2();
 }

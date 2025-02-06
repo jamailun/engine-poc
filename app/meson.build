@@ -1,5 +1,4 @@
-
-engine_test_exe = executable(
+executable(
     'engine-test', ['main.cc'],
     dependencies: [engine_dep],
     install: false,
