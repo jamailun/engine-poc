@@ -70,12 +70,10 @@ void test_2() {
     engine::component_registry registry;
     std::shared_ptr<engine::entity> object = std::make_shared<engine::entity>();
 
-    std::shared_ptr<component_wif> wif = std::make_shared<component_wif>(object);
-    std::shared_ptr<component_pos> pos = std::make_shared<component_pos>(object, 69, 42);
+    std::shared_ptr<component_wif> wif = engine::entity::create_component<component_wif>(object);
+    std::shared_ptr<component_pos> pos = engine::entity::create_component<component_pos>(object, 69, 42);
     registry.add(wif);
-    object->register_component(wif);
     registry.add(pos);
-    object->register_component(pos);
 
     // "game-loop"
     std::cout << "============================" << std::endl;

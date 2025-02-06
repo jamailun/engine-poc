@@ -85,7 +85,13 @@ public:
         return slot_ptr->get();
     }
 
-
+    template <component Component, typename... _Args>
+    static std::shared_ptr<Component> create_component(std::shared_ptr<entity> entity, _Args&&... args) {
+        std::shared_ptr<Component> wif = std::make_shared<Component>(entity, std::forward<_Args>(args)...);
+        //TODO push to registry
+        entity->register_component(wif);
+        return wif;
+    }
 
 private:
     std::unordered_map<std::type_index, std::shared_ptr<detail::homogeneous_component_slot>> _components_slots;
