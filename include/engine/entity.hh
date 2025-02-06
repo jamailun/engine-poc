@@ -10,7 +10,7 @@ namespace detail {
 
 class homogeneous_component_slot {
 protected:
-    ~homogeneous_component_slot() = default;
+    virtual ~homogeneous_component_slot() = default;
 public:
     virtual void remove() = 0;
 };
@@ -45,7 +45,15 @@ public:
         std::cout << "Nouvelle entity" << std::endl;
     }
     ~entity() {
+        destroy_now();
         std::cout << "entity deleted" << std::endl;
+    }
+
+    void destroy_now() {
+        for(auto& slot : _components_slots) {
+            slot.second->remove();
+        }
+        _components_slots.clear();
     }
 
     template <component Component>

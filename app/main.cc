@@ -4,32 +4,20 @@
 #include <engine/registry.hh>
 #include <engine/entity.hh>
 
-using entity_ptr = std::shared_ptr<engine::entity>;
-
-class base_component {
-private:
-    entity_ptr _entity;
-protected:
-    base_component(entity_ptr entity) : _entity(entity) {}
-    ~base_component() = default;
-public:
-    entity_ptr get_entity() { return _entity; }
-};
-
-class component_waf : public base_component {
+class component_waf : public engine::base_component {
 public:
     component_waf(entity_ptr entity) : base_component(entity) {}
     void action() { std::cout << "WAF action" << std::endl; }
 };
 
-class component_woof : public base_component {
+class component_woof : public engine::base_component {
 public:
     component_woof(entity_ptr entity) : base_component(entity) {}
     void update() { std::cout << "WOOF update" << std::endl; }
     void action() { std::cout << "WOOF action" << std::endl; }
 };
 
-class component_pos : public base_component {
+class component_pos : public engine::base_component {
 public:
     float x, y;
     explicit component_pos(entity_ptr entity) : base_component(entity), x(0), y(0) {}
@@ -40,7 +28,7 @@ public:
     }
 };
 
-class component_wif : public base_component {
+class component_wif : public engine::base_component {
 public:
     component_wif(entity_ptr entity) : base_component(entity) {}
     void action() {
@@ -80,7 +68,7 @@ void test_1() {
 
 void test_2() {
     engine::component_registry registry;
-    entity_ptr object = std::make_shared<engine::entity>();
+    std::shared_ptr<engine::entity> object = std::make_shared<engine::entity>();
 
     std::shared_ptr<component_wif> wif = std::make_shared<component_wif>(object);
     std::shared_ptr<component_pos> pos = std::make_shared<component_pos>(object, 69, 42);
@@ -89,14 +77,16 @@ void test_2() {
     registry.add(pos);
     object->register_component(pos);
 
-
-
-    registry.update_all();
-    registry.action_all();
+    // "game-loop"
     std::cout << "============================" << std::endl;
-    registry.update_all();
-    registry.action_all();
-    std::cout << "============================" << std::endl;
+    for(size_t i = 0; i < 4; i++) {
+        registry.update_all();
+        registry.action_all();
+        std::cout << "============================" << std::endl;
+    }
+
+    object->destroy_now();
+    object = nullptr;
 }
 
 int main() {
