@@ -1,4 +1,3 @@
-
 # VSCode
 /.vscode
 
@@ -9,3 +8,7 @@
 
 # Build directories
 /build*
+
+# Deps
+/subprojects/*
+!/subprojects/*.wrap

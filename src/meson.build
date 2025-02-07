@@ -4,7 +4,7 @@ engine_sources = [
 
 engine_lib = static_library(
     'engine_static', engine_sources,
-    dependencies: [],
+    dependencies: [spdlog_dep],
     cpp_args: cpp_warning_flags,
     link_args: [],
     include_directories: engine_headers_dir,
