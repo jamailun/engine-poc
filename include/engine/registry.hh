@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <algorithm>
@@ -8,30 +7,31 @@
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
+#include <iostream>
 
 #include "engine/component.hh"
-
-
 
 namespace engine::detail {
 
 class homogeneous_component_registry {
-
 public:
     virtual void remove(void* addr) = 0;
+    virtual void clear() = 0;
+    virtual size_t size() const = 0;
 
     virtual void update_all() = 0;
-    virtual void action_all() = 0;
+    virtual void render_all() = 0;
 
     virtual ~homogeneous_component_registry() = default;
-
 };
 
 
 template <component Component>
 class homogeneous_component_registry_impl: public homogeneous_component_registry {
-
+private:
+    std::vector<std::shared_ptr<Component>> _components;
 public:
+    virtual ~homogeneous_component_registry_impl() = default;
 
     void add(std::shared_ptr<Component> cmpt) {
         if(cmpt == nullptr) {
@@ -52,6 +52,14 @@ public:
         }
     }
 
+    void clear() override {
+        _components.clear();
+    }
+
+    inline size_t size() const override {
+        return _components.size();
+    }
+
     void update_all() override {
         if constexpr(updatable<Component>) {
             std::for_each(_components.begin(), _components.end(), [](std::shared_ptr<Component>& cmpt) {
@@ -60,19 +68,13 @@ public:
         }
     }
 
-    void action_all() override {
-        if constexpr(actionable<Component>) {
+    void render_all() override {
+        if constexpr(renderable<Component>) {
             std::for_each(_components.begin(), _components.end(), [](std::shared_ptr<Component>& cmpt) {
-                cmpt->action();
+                cmpt->render();
             });
         }
     }
-
-    virtual ~homogeneous_component_registry_impl() = default;
-
-private:
-    std::vector<std::shared_ptr<Component>> _components;
-
 };
 
 } // namespace engine::detail
@@ -81,8 +83,17 @@ private:
 namespace engine {
 
 class component_registry {
-
+private:
+    std::unordered_map<std::type_index, std::shared_ptr<detail::homogeneous_component_registry>> _sub_registries;
 public:
+    component_registry() = default;
+    ~component_registry() {
+        for(auto& reg : _sub_registries) {
+            reg.second->clear();
+        }
+        _sub_registries.clear();
+    }
+
     template <component Component>
     void add(std::shared_ptr<Component> cmpt) {
         using sub_registry_impl = detail::homogeneous_component_registry_impl<Component>;
@@ -115,15 +126,19 @@ public:
         }
     }
 
-    void action_all() {
+    void render_all() {
         for(auto& e: _sub_registries) {
-            e.second->action_all();
+            e.second->render_all();
         }
     }
 
-private:
-    std::unordered_map<std::type_index, std::shared_ptr<detail::homogeneous_component_registry>> _sub_registries;
-
+    size_t total_size() const {
+        size_t total = 0;
+        for(auto& reg : _sub_registries) {
+            total += reg.second->size();
+        }
+        return total;
+    }
 };
 
 } // namespace engine

@@ -41,12 +41,13 @@ class entity {
 private:
     std::string _name;
 public:
-    entity() {
-        std::cout << "Nouvelle entity" << std::endl;
+    entity(std::string name) : _name(name) {
+        std::cout << "Nouvelle entity: '" << name << "'." << std::endl;
     }
+    entity() : entity("entity") {}
     ~entity() {
         destroy_now();
-        std::cout << "entity deleted" << std::endl;
+        std::cout << "entity " << _name << " deleted" << std::endl;
     }
 
     void destroy_now() {
@@ -54,6 +55,10 @@ public:
             slot.second->remove();
         }
         _components_slots.clear();
+    }
+
+    inline const std::string& name() const {
+        return _name;
     }
 
     template <component Component>
@@ -83,14 +88,6 @@ public:
             assert(slot_ptr != nullptr);
         }
         return slot_ptr->get();
-    }
-
-    template <component Component, typename... _Args>
-    static std::shared_ptr<Component> create_component(std::shared_ptr<entity> entity, _Args&&... args) {
-        std::shared_ptr<Component> wif = std::make_shared<Component>(entity, std::forward<_Args>(args)...);
-        //TODO push to registry
-        entity->register_component(wif);
-        return wif;
     }
 
 private:

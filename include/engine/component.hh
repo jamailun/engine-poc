@@ -1,8 +1,6 @@
-
 #pragma once
 
 #include <concepts>
-
 
 namespace engine {
 
@@ -20,12 +18,15 @@ concept updatable = requires(T cmpt) {
 };
 
 template <typename T>
-concept actionable = requires(T cmpt) {
-    { cmpt.action() } -> std::same_as<void>;
+concept renderable = requires(T cmpt) {
+    { cmpt.render() } -> std::same_as<void>;
 };
 
+/**
+ * Component concept.
+ */
 template <typename T>
-concept component = base_component_concept<T> && (updatable<T> || actionable<T>);
+concept component = base_component_concept<T> && (updatable<T> || renderable<T>);
 
 /**
  * Abstract class of something able to being a component.
