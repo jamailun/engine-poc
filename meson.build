@@ -6,14 +6,14 @@ cpp_warning_flags = [
   '-pedantic-errors',
   '-Wdisabled-optimization',
   '-Werror=unused-result',
-  '-Werror=return-type'
+  '-Werror=return-type',
+  '-DSPDLOG_COMPILED_LIB'
 ]
 
 # Spdlog
 spdlog = subproject('spdlog', required: true)
 spdlog_dep = spdlog.get_variable('spdlog_dep')
-add_project_arguments('-DSPDLOG_FMT_EXTERNAL', language: 'cpp')
-add_project_arguments('-DSPDLOG_FMT_EXTERNAL', language: 'c')
+spdlog_dep = dependency('spdlog', required: true)
 
 # Engine Build
 subdir('include')
