@@ -41,7 +41,4 @@ public:
     const T* operator*() const {
         return _pointer;
     }
-    bool operator==(nullptr_t) const {
-        return !is_valid();
-    }
 };

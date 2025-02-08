@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include "engine/component.hh"
 #include "engine/math.hh"
 

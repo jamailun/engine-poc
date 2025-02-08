@@ -6,7 +6,9 @@ engine_sources = [
     'engine/game_camera.cc',
     'engine/math.cc',
 
+    'engine/components/image_renderer.cc',
     'engine/components/transform.cc',
+    'engine/components/tilemap_renderer.cc',
 
     'engine/resources/resources_manager.cc',
     'engine/resources/image.cc',

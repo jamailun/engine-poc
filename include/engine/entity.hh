@@ -36,9 +36,12 @@ public:
         return _component;
     }
 };
-}
+} // namespace detail
 
+// FWD
 class world;
+class transform;
+namespace math { class Point; }
 
 /**
  * An entity, or "game object" is something that hold components inside a world.
@@ -103,6 +106,9 @@ public:
         }
         return slot_ptr->get();
     }
+
+    std::shared_ptr<transform> get_transform();
+    math::Point get_world_pos();
 
     guaranteed_ptr<world> get_world() {
         return _world;

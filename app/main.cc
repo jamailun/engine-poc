@@ -6,6 +6,7 @@
 #include <engine/sdl/drawer.hh>
 #include <engine/resources/resources_manager.hh>
 #include <engine/components/transform.hh>
+#include <engine/components/image_renderer.hh>
 
 #include <spdlog/spdlog.h>
 
@@ -47,6 +48,10 @@ int main() {
 
 
 void setup(guaranteed_ptr<engine::world> world) {
-    std::shared_ptr<engine::entity> object = world->create_entity("toto");
-    object->create_component<component_wif>();
+    std::shared_ptr<engine::entity> toto = world->create_entity("toto");
+    toto->create_component<component_wif>();
+
+    
+    std::shared_ptr<engine::entity> titi = world->create_entity("titi");
+    titi->create_component<engine::image_renderer>("sprite1.png");
 }

@@ -2,8 +2,8 @@
 
 #include "engine/utils/memory.hh"
 
-#include <SDL_render.h>
-#include <SDL_rect.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_rect.h>
 #include <memory>
 #include <string>
 

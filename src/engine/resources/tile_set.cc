@@ -31,7 +31,7 @@ void TileSet::initialize(nlohmann::json& data) {
 
     // Get image
     _image_ref = get_manager().find_image(texture_name);
-    if(_image_ref == nullptr) {
+    if(!_image_ref.is_valid()) {
         spdlog::error("Could not find asset file/{} !", texture_name);
         return;
     }
