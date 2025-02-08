@@ -20,6 +20,7 @@ public:
         auto pos = get_entity()->get_component<component_pos>();
         if(pos) {
             spdlog::info("wif.render. Pos-component is at ({}, {}).", pos->x, pos->y);
+            spdlog::info("-- entity/world = {}.", get_entity()->get_world()->name());
         }
     }
     void update() {
@@ -34,10 +35,10 @@ public:
 
 int main() {
     spdlog::info("POC Started.");
-    std::shared_ptr<engine::entity> object = std::make_shared<engine::entity>("toto");
+    std::shared_ptr<engine::entity> object = engine::get_engine().create_entity("toto");
 
-    engine::get_engine().create_component<component_wif>(object);
-    engine::get_engine().create_component<component_pos>(object, 12, 12);
+    object->create_component<component_wif>();
+    object->create_component<component_pos>(12, 12);
 
     // "game-loop"
     for(size_t i = 0; i < 4; i++) {
@@ -47,8 +48,5 @@ int main() {
     }
     spdlog::info("---------------------------");
 
-    object->destroy_now();
-    object = nullptr;
-    
     spdlog::info("POC Terminated.");
 }

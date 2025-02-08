@@ -4,6 +4,7 @@
 #include <string>
 #include "engine/registry.hh"
 #include "engine/component.hh"
+#include "engine/guaranteed_ptr.hh"
 
 namespace engine {
 namespace detail {
@@ -37,14 +38,21 @@ public:
 };
 }
 
+class world;
+
+/**
+ * An entity, or "game object" is something that hold components inside a world.
+ */
 class entity {
+    friend class world;
 private:
+    guaranteed_ptr<world> _world;
     std::string _name;
 public:
-    entity(std::string name) : _name(name) {
+    entity(guaranteed_ptr<world> world, std::string name) : _world(world), _name(name) {
         std::cout << "Nouvelle entity: '" << name << "'." << std::endl;
     }
-    entity() : entity("entity") {}
+    entity(guaranteed_ptr<world> world) : entity(world, "entity") {}
     ~entity() {
         destroy_now();
         std::cout << "entity " << _name << " deleted" << std::endl;
@@ -59,6 +67,14 @@ public:
 
     inline const std::string& name() const {
         return _name;
+    }
+
+    template <component Component, typename... _Args>
+    std::shared_ptr<Component> create_component(_Args&&... args) {
+        std::shared_ptr<Component> cmpt = std::make_shared<Component>(this, std::forward<_Args>(args)...);
+        register_component(cmpt);
+        engine::get_registry().add(cmpt);
+        return cmpt;
     }
 
     template <component Component>
@@ -88,6 +104,10 @@ public:
             assert(slot_ptr != nullptr);
         }
         return slot_ptr->get();
+    }
+
+    guaranteed_ptr<world> get_world() {
+        return _world;
     }
 
 private:

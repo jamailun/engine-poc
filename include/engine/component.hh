@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include "engine/guaranteed_ptr.hh"
 
 namespace engine {
 
@@ -9,7 +10,7 @@ class entity;
 
 template <typename T>
 concept base_component_concept = requires(T cmpt) {
-    { cmpt.get_entity() } -> std::same_as<std::shared_ptr<entity>>;
+    { cmpt.get_entity() } -> std::same_as<guaranteed_ptr<entity>>;
 };
 
 template <typename T>
@@ -33,10 +34,11 @@ concept component = base_component_concept<T> && (updatable<T> || renderable<T>)
  */
 class base_component {
 protected:
-    using entity_ptr = std::shared_ptr<entity>;
+    using entity_ptr = guaranteed_ptr<entity>;
 private:
     entity_ptr _entity;
 protected:
+    base_component(entity* entity) : _entity(entity) {}
     base_component(entity_ptr entity) : _entity(entity) {}
     virtual ~base_component() {
         destroy_now();

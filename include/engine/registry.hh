@@ -141,4 +141,6 @@ public:
     }
 };
 
+component_registry& get_registry();
+
 } // namespace engine

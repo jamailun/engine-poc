@@ -11,8 +11,9 @@ cpp_warning_flags = [
 ]
 
 # Spdlog
-spdlog = subproject('spdlog', required: true)
-spdlog_dep = spdlog.get_variable('spdlog_dep')
+
+# spdlog = subproject('spdlog', required: true)
+# spdlog_dep = spdlog.get_variable('spdlog_dep')
 spdlog_dep = dependency('spdlog', required: true)
 
 # Engine Build
