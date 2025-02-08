@@ -10,11 +10,10 @@ cpp_warning_flags = [
   '-DSPDLOG_COMPILED_LIB'
 ]
 
-# Spdlog
-
-# spdlog = subproject('spdlog', required: true)
-# spdlog_dep = spdlog.get_variable('spdlog_dep')
+# Dependencies
 spdlog_dep = dependency('spdlog', required: true)
+sdl2_dep = dependency('SDL2', required: true)
+sdl2_image_dep = dependency('SDL2_image', required: true)
 
 # Engine Build
 subdir('include')
