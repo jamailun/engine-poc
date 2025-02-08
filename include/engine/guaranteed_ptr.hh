@@ -12,7 +12,7 @@ public:
     guaranteed_ptr(T* pointer) : _pointer(pointer) {}
     guaranteed_ptr() : _pointer(nullptr) {}
     guaranteed_ptr(const guaranteed_ptr<T>& other) : _pointer(other._pointer) {}
-    guaranteed_ptr(guaranteed_ptr<T>&& other): _pointer(other._pointer) { other._ptr = nullptr; }
+    guaranteed_ptr(guaranteed_ptr<T>&& other): _pointer(other._pointer) { other._pointer = nullptr; }
 
     bool operator()() const {
         return _pointer != nullptr;

@@ -7,7 +7,7 @@
 using namespace engine;
 
 game_engine::game_engine() {
-    _current_world =  std::make_shared<world>("default");
+    _current_world = std::make_shared<world>("default");
 }
 
 void game_engine::on_loop_initialize() {
@@ -19,6 +19,11 @@ void game_engine::on_loop_initialize() {
         config.get_screen_height()
     );
     _camera.move_to_center_screen();
+
+    // Setup-operation
+    for(auto& operation : _setup_operations) {
+        operation(_current_world.get());
+    }
 }
 
 void game_engine::on_loop_shutdown() {
@@ -30,10 +35,13 @@ void game_engine::on_loop_update() {
     _registry.update_all();
 }
 void game_engine::on_loop_render() {
+    // Clear screen
+    drawer::enable_color(colors::black);
+    SDL_Rect rect = {0, 0, 0, 0};
+    SDL_GetWindowSize(sdl::get_window().sdl_window(), &(rect.w), &(rect.h));
+    SDL_RenderFillRect(sdl::get_renderer(), &rect);
 
-    drawer::fill_rect_center(math::Point(0), 800, 400, colors::blue);
-    drawer::fill_rect_center(math::Point(0), 200, 100, colors::red);
-
+    // Render elements
     _registry.render_all();
 }
 

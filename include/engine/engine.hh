@@ -4,6 +4,7 @@
 #include "engine/entity.hh"
 #include "engine/world.hh"
 #include "engine/game_camera.hh"
+#include "engine/guaranteed_ptr.hh"
 
 #include <SDL2/SDL_events.h>
 
@@ -14,6 +15,8 @@ namespace math {
     class Point;
 }
 
+using setup_operation = std::function<void(guaranteed_ptr<world>)>;
+
 class game_engine {
     friend game_engine& get_engine();
 private:
@@ -23,8 +26,10 @@ private:
     bool _running = false;
     component_registry _registry;
     std::shared_ptr<world> _current_world;
-
     game_camera _camera;
+
+    // user-setup
+    std::vector<setup_operation> _setup_operations;
 
     // Loop : pre/post
     void on_loop_initialize();
@@ -49,6 +54,10 @@ public:
         _registry.add(cmpt);
         entity->register_component(cmpt);
         return cmpt;
+    }
+
+    void register_setup_operation(setup_operation operation) {
+        _setup_operations.push_back(operation);
     }
 
     // Start the game engine.

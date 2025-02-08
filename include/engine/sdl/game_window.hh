@@ -23,6 +23,7 @@ public:
     ~game_window();
 
     SDL_Renderer* renderer() { return _renderer_ptr; }
+    SDL_Window* sdl_window() { return _window_ptr; }
     bool initialized() const { return _initialized; }
     const configuration& get_configuration() const { return _config; }
 };

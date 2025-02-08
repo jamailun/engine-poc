@@ -1,9 +1,12 @@
 engine_sources = [
+    'engine/entity.cc',
     'engine/engine.cc',
     'engine/engine_loop.cc',
     'engine/engine_loop_event.cc',
     'engine/game_camera.cc',
     'engine/math.cc',
+
+    'engine/components/transform.cc',
 
     'engine/sdl/configuration.cc',
     'engine/sdl/drawer.cc',

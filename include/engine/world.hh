@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include "engine/entity.hh"
+#include "engine/components/transform.hh"
 
 namespace engine {
 
@@ -21,6 +22,7 @@ public:
     std::shared_ptr<entity> create_entity(std::string name) {
         auto entity = std::make_shared<engine::entity>(this, name);
         _entities.push_back(entity);
+        //entity->create_component<transform>();
         return entity;
     }
 

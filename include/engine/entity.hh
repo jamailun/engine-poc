@@ -49,9 +49,7 @@ private:
     guaranteed_ptr<world> _world;
     std::string _name;
 public:
-    entity(guaranteed_ptr<world> world, std::string name) : _world(world), _name(name) {
-        std::cout << "Nouvelle entity: '" << name << "'." << std::endl;
-    }
+    entity(guaranteed_ptr<world> world, std::string name);
     entity(guaranteed_ptr<world> world) : entity(world, "entity") {}
     ~entity() {
         destroy_now();

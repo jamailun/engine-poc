@@ -79,7 +79,6 @@ void drawer::fill_rect(Rect rect, Color color) {
         rect.w,
         rect.h
     };
-    spdlog::trace("fill_rect[{}] -> ({},{},{},{}) :::: {:p}", rect, sdl_rect.x, sdl_rect.y, sdl_rect.w, sdl_rect.h, (void*)sdl::get_renderer());
 
     // Color
     enable_color(color);
