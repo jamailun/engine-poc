@@ -106,6 +106,14 @@ public:
         }
         slot_ptr->set(cmpt);
     }
+    
+    template<component Component>
+    void destroy_component() {
+        std::shared_ptr<Component> raw_ptr = get_component<Component>();
+        if(!raw_ptr) return;
+        const std::type_index tidx = std::type_index(typeid(Component));
+        engine::get_registry().remove(tidx, (void*) raw_ptr.get());
+    }
 
     template <component Component>
     std::shared_ptr<Component> get_component() {

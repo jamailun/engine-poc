@@ -33,6 +33,10 @@ public:
         if(inputs.is_key_pressed(SDL_Scancode::SDL_SCANCODE_DELETE)) {
             spdlog::debug("pressed delete.");
             get_entity()->request_destroy();
+        } else 
+        if(inputs.is_key_pressed(SDL_Scancode::SDL_SCANCODE_X)) {
+            spdlog::debug("pressed X.");
+            get_entity()->destroy_component<suicide_components>();
         }
         // spdlog::debug("just a chill input.");
     }
