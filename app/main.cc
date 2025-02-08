@@ -25,6 +25,18 @@ public:
     }
 };
 
+class suicide_components : public engine::base_component {
+public:
+    suicide_components(entity_ptr entity) : base_component(entity) {}
+    void update() {
+        const auto& inputs = engine::get_inputs();
+        if(inputs.is_key_pressed(SDL_Scancode::SDL_SCANCODE_DELETE)) {
+            spdlog::debug("pressed delete.");
+        }
+        // spdlog::debug("just a chill input.");
+    }
+};
+
 void setup(guaranteed_ptr<engine::world> world);
 
 int main() {
@@ -51,7 +63,7 @@ void setup(guaranteed_ptr<engine::world> world) {
     std::shared_ptr<engine::entity> toto = world->create_entity("toto");
     toto->create_component<component_wif>();
 
-    
     std::shared_ptr<engine::entity> titi = world->create_entity("titi");
     titi->create_component<engine::image_renderer>("sprite1.png");
+    titi->create_component<suicide_components>();
 }

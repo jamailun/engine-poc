@@ -17,6 +17,7 @@ engine_sources = [
 
     'engine/sdl/configuration.cc',
     'engine/sdl/drawer.cc',
+    'engine/sdl/inputs.cc',
     'engine/sdl/game_window.cc',
     
     'engine/utils/fs_utils.cc'

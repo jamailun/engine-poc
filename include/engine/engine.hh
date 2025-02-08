@@ -5,6 +5,7 @@
 #include "engine/world.hh"
 #include "engine/game_camera.hh"
 #include "engine/guaranteed_ptr.hh"
+#include "engine/sdl/inputs.hh"
 
 #include <SDL2/SDL_events.h>
 
@@ -27,6 +28,7 @@ private:
     component_registry _registry;
     std::shared_ptr<world> _current_world;
     game_camera _camera;
+    Inputs _inputs;
 
     // user-setup
     std::vector<setup_operation> _setup_operations;
@@ -81,6 +83,8 @@ public:
     math::Point world_to_camera(math::Point world_pos) const;
     math::Point camera_to_world(float x, float y) const { return camera_to_world(math::Point(x, y)); }
     math::Point camera_to_world(math::Point camera_pos) const;
+    
+    const Inputs& inputs() const { return _inputs; }
 };
 
 /*
