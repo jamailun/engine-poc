@@ -4,6 +4,7 @@
 #include <engine/engine.hh>
 #include <engine/sdl/game_window.hh>
 #include <engine/sdl/drawer.hh>
+#include <engine/resources/resources_manager.hh>
 #include <engine/components/transform.hh>
 
 #include <spdlog/spdlog.h>
@@ -33,6 +34,9 @@ int main() {
     engine::sdl::configuration_builder builder {};
     builder.screen_title = "test";
     engine::sdl::initialize_window(builder);
+
+    // Initialize resources (after window !)
+    engine::resources::get_manager().load_path_from_disk("/opt/perso-cpp/engine-poc/assets");
 
     // Initialize world
     engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});

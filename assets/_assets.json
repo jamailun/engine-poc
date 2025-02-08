@@ -1,0 +1,16 @@
+{
+    "version": "0.0.1",
+    "assets": {
+        "__[ sprites ]__": 0,
+        "sprite1.png": 1,
+        
+        "__[ tile maps ]__": 0,
+        "tileset.png": 1,
+        "tileset.json": 10,
+        "tilemap.json": 11,
+        
+        "tileset_basic.png": 1,
+        "tileset_basic.json": 10,
+        "tilemap_basic.json": 11
+    }
+}

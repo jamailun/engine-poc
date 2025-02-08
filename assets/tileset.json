@@ -1,0 +1,7 @@
+{
+    "texture": "tileset.png",
+    "cell_size": {
+        "width": 64,
+        "height": 64
+    }
+}

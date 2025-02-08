@@ -8,9 +8,16 @@ engine_sources = [
 
     'engine/components/transform.cc',
 
+    'engine/resources/resources_manager.cc',
+    'engine/resources/image.cc',
+    'engine/resources/tile_map.cc',
+    'engine/resources/tile_set.cc',
+
     'engine/sdl/configuration.cc',
     'engine/sdl/drawer.cc',
     'engine/sdl/game_window.cc',
+    
+    'engine/utils/fs_utils.cc'
 ]
 
 engine_lib = static_library(
