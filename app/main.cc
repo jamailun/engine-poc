@@ -32,6 +32,7 @@ public:
         const auto& inputs = engine::get_inputs();
         if(inputs.is_key_pressed(SDL_Scancode::SDL_SCANCODE_DELETE)) {
             spdlog::debug("pressed delete.");
+            get_entity()->request_destroy();
         }
         // spdlog::debug("just a chill input.");
     }

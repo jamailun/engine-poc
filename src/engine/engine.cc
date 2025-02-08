@@ -60,6 +60,16 @@ math::Point game_engine::camera_to_world(math::Point point) const {
     };
 }
 
+// Queues
+
+void game_engine::handle_queue__entity_delete() {
+    while(!_to_delete_entities.empty()) {
+        entity* ptr = _to_delete_entities.front();
+        _current_world->destroy_entity_now(ptr);
+        _to_delete_entities.pop();
+    }
+}
+
 // STATIC
 
 game_engine& engine::get_engine() {

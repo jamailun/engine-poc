@@ -14,6 +14,7 @@ protected:
     virtual ~homogeneous_component_slot() = default;
 public:
     virtual void remove() = 0;
+    virtual void* get_raw() = 0;
 };
 
 template <component Component>
@@ -35,6 +36,10 @@ public:
     std::shared_ptr<Component> get() {
         return _component;
     }
+
+    void* get_raw() {
+        return (void*) (_component.get());
+    }
 };
 } // namespace detail
 
@@ -51,19 +56,27 @@ class entity {
 private:
     guaranteed_ptr<world> _world;
     std::string _name;
+    
+    std::unordered_map<std::type_index, std::shared_ptr<detail::homogeneous_component_slot>> _components_slots;
+
+    bool _destroy_has_been_requested = false;
+
+    // only for the world
+    void destroy_now() {
+        for(auto& slot : _components_slots) {
+            // remove on registry
+            engine::get_registry().remove(slot.first, slot.second->get_raw());
+            // remove on self
+            slot.second->remove();
+        }
+        _components_slots.clear();
+    }
 public:
     entity(guaranteed_ptr<world> world, std::string name);
     entity(guaranteed_ptr<world> world) : entity(world, "entity") {}
     ~entity() {
         destroy_now();
         std::cout << "entity " << _name << " deleted" << std::endl;
-    }
-
-    void destroy_now() {
-        for(auto& slot : _components_slots) {
-            slot.second->remove();
-        }
-        _components_slots.clear();
     }
 
     inline const std::string& name() const {
@@ -114,8 +127,7 @@ public:
         return _world;
     }
 
-private:
-    std::unordered_map<std::type_index, std::shared_ptr<detail::homogeneous_component_slot>> _components_slots;
+    void request_destroy();
 };
 
 };

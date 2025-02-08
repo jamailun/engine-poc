@@ -8,6 +8,7 @@
 #include "engine/sdl/inputs.hh"
 
 #include <SDL2/SDL_events.h>
+#include <queue>
 
 namespace engine {
 
@@ -24,6 +25,7 @@ private:
     game_engine();
     ~game_engine() = default;
 
+    // State and elements
     bool _running = false;
     component_registry _registry;
     std::shared_ptr<world> _current_world;
@@ -32,6 +34,10 @@ private:
 
     // user-setup
     std::vector<setup_operation> _setup_operations;
+    
+    // Queues
+    std::queue<entity*> _to_delete_entities;
+    void handle_queue__entity_delete();
 
     // Loop : pre/post
     void on_loop_initialize();
@@ -78,13 +84,22 @@ public:
         return {};
     }
 
+    // Get camera.
     game_camera& camera() { return _camera; }
+
+    // ---- RO
+
+    const Inputs& inputs() const { return _inputs; }
     math::Point world_to_camera(float x, float y) const { return world_to_camera(math::Point(x, y)); }
     math::Point world_to_camera(math::Point world_pos) const;
     math::Point camera_to_world(float x, float y) const { return camera_to_world(math::Point(x, y)); }
     math::Point camera_to_world(math::Point camera_pos) const;
     
-    const Inputs& inputs() const { return _inputs; }
+    // ---- queues
+
+    void request_entity_deletion(entity* entity_ptr) {
+        _to_delete_entities.push(entity_ptr);
+    }
 };
 
 /*

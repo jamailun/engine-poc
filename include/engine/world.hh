@@ -26,6 +26,15 @@ public:
         return entity;
     }
 
+    void destroy_entity_now(entity* entity_ptr) {
+        for(auto it = _entities.begin(); it != _entities.end(); it++) {
+            if(it->get() == entity_ptr) {
+                _entities.erase(it);
+                return;
+            }
+        }
+    }
+
     void destroy_now() {
         for(auto& entity : _entities) {
             entity->destroy_now();

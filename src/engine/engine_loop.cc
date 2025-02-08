@@ -31,6 +31,9 @@ void game_engine::start() {
         
         // Update screen (buffer swapping)
         SDL_RenderPresent(sdl::get_renderer());
+
+        // Chores
+        handle_queue__entity_delete();
     }
     on_loop_shutdown();
     sdl::destroy_window();

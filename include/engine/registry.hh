@@ -120,6 +120,11 @@ public:
         it->second->remove(static_cast<void*>(cmpt.get()));
     }
 
+    void remove(std::type_index index, void* raw) {
+        auto& reg = _sub_registries[index];
+        reg->remove(raw);
+    }
+
     void update_all() {
         for(auto& e: _sub_registries) {
             e.second->update_all();
