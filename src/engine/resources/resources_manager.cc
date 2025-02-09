@@ -32,23 +32,23 @@ resources_manager::~resources_manager() {
 
 // 
 
-void resources_manager::load_path_from_disk(std::string path) {
+bool resources_manager::load_path_from_disk(std::string path) {
     if( ! engine::sdl::get_window().initialized()) {
         spdlog::critical("Cannot load files without a renderer to be able to compute textures. Initialize the SDL window first.");
-        return;
+        return false;
     }
 
     spdlog::debug("Loading path '{}'.", path);
     if(!fs::is_directory(path)) {
         spdlog::critical("Path '" + path + "' is not a directory.");
-        return;
+        return false;
     }
 
     // Assets JSON
     fs::directory_entry assets = get_child_file(path, "_assets.json");
     if(!assets.exists()) {
         spdlog::critical("Assets file '{}' is missing.", assets.path().string());
-        return;
+        return false;
     }
 
     std::ifstream f( assets.path().string() );
@@ -96,6 +96,7 @@ void resources_manager::load_path_from_disk(std::string path) {
     }
 
     spdlog::info("Resources Manager loaded {} assets successfully.", count);
+    return true;
 }
 
 #define RM__FIND_DATA(T, method, map) \

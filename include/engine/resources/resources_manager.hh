@@ -51,7 +51,8 @@ private:
 
     template<typename T>
     void load_resource(resources_map<T>& map, std::string& id, std::function<resource_ptr<T>(void)> supplier) {
-        resource_ptr<T> object = std::move(supplier());
+        resource_ptr<T> object = supplier();
+        // resource_ptr<T> object = std::move(supplier());
         if(object != nullptr)
             map[id] = std::move(object);
     }
@@ -60,7 +61,7 @@ public:
     resources_manager() = default;
     ~resources_manager();
 
-    void load_path_from_disk(std::string path);
+    bool load_path_from_disk(std::string path);
 
     resource_ref<Image> find_image(std::string& id) const;
     resource_ref<TileSet> find_tile_set(std::string& id) const;

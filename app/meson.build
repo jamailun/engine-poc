@@ -1,6 +1,8 @@
 app_headers = include_directories('.')
 
 app_sources = [
+    'game/configuration/args_reader.cc',
+
     # Components
     'game/components/army_controller.cc',
     'game/components/key_controller.cc',

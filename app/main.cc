@@ -11,22 +11,24 @@
 #include <spdlog/spdlog.h>
 
 #include "game/components/debug_components.hh"
-
-
+#include "game/configuration/args_reader.hh"
 
 void setup(guaranteed_ptr<engine::world> world);
 
-int main() {
-    spdlog::set_level(spdlog::level::trace);
+int main(int argc, char** argv) {
+    auto program_config = game::read_arguments(argc, argv);
     spdlog::info("POC Started.");
 
     // Initialize window
-    engine::sdl::configuration_builder builder {};
-    builder.screen_title = "test";
-    engine::sdl::initialize_window(builder);
+    program_config.config.screen_title = "POC - Engine";
+    engine::sdl::initialize_window(program_config.config);
 
     // Initialize resources (after window !)
-    engine::resources::get_manager().load_path_from_disk("/opt/perso-cpp/engine-poc/assets");
+    if(!engine::resources::get_manager().load_path_from_disk(program_config.assets_folder)) {
+        spdlog::critical("Failed to load assets directory.");
+        engine::sdl::destroy_window();
+        return 1;
+    }
 
     // Initialize world
     engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
