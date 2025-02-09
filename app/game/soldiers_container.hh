@@ -1,8 +1,11 @@
 #pragma once
 
+#include <engine/math.hh>
+
+#include "components/soldiers/soldier.hh"
+
 #include <memory>
 #include <vector>
-#include "components/soldiers/soldier.hh"
 
 namespace game {
 
@@ -14,7 +17,7 @@ protected:
     std::vector<soldier_ptr> _soldiers;
 
     virtual void soldiers_changed() {/* optional overwrite */}
-    virtual void post_soldier_add(Soldier* soldier) {(void) soldier;/* optional overwrite */}
+    virtual void post_soldier_add(soldier_ptr soldier) {(void) soldier;/* optional overwrite */}
 
 public:
     SoldiersContainer() = default;

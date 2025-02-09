@@ -1,16 +1,16 @@
-#include "engine/entity.hpp"
-#include "engine/math_utils.hpp"
+#include <engine/entity.hh>
+#include <engine/math_utils.hh>
 
-#include "game/soldiers_container.hpp"
-#include "game/components/soldiers/soldier.hpp"
+#include "game/soldiers_container.hh"
+#include "game/components/soldiers/soldier.hh"
 
 #include <algorithm>
 #include <spdlog/spdlog.h>
 
 using namespace game;
 
-void SoldiersContainer::remove_soldier(Soldier* soldier) {
-    spdlog::debug("SoldiersContainer: removing soldier {}.", soldier->get_entity()->get_name());
+void SoldiersContainer::remove_soldier(soldier_ptr soldier) {
+    spdlog::debug("SoldiersContainer: removing soldier {}.", soldier->get_entity()->name());
 
     size_t size_before = _soldiers.size();
     _soldiers.erase(std::remove(_soldiers.begin(), _soldiers.end(), soldier), _soldiers.end());
@@ -20,7 +20,7 @@ void SoldiersContainer::remove_soldier(Soldier* soldier) {
         soldiers_changed();
 }
 
-void SoldiersContainer::register_soldier(std::shared_ptr<Soldier> soldier) {
+void SoldiersContainer::register_soldier(soldier_ptr soldier) {
     if(soldier == nullptr) {
         spdlog::error("Tried to register an NULLPTR soldier onto soldier-container.");
         return;
@@ -31,12 +31,12 @@ void SoldiersContainer::register_soldier(std::shared_ptr<Soldier> soldier) {
     soldiers_changed();
 }
 
-void SoldiersContainer::register_soldiers(std::vector<Soldier*> soldiers) {
-    for(auto* soldier : soldiers)
+void SoldiersContainer::register_soldiers(std::vector<soldier_ptr> soldiers) {
+    for(auto soldier : soldiers)
         register_soldier(soldier);
 }
 
-bool SoldiersContainer::contains_soldier(const Soldier* soldier) const {
+bool SoldiersContainer::contains_soldier(const soldier_ptr soldier) const {
     return std::find(_soldiers.begin(), _soldiers.end(), soldier) != _soldiers.end();
 }
 
@@ -45,6 +45,6 @@ void SoldiersContainer::clear_soldiers() {
 }
 
 engine::math::Point SoldiersContainer::average_position() const {
-    std::function<engine::math::Point(Soldier*)> function = [](Soldier* soldier){ return soldier->get_pos(); };
+    std::function<engine::math::Point(soldier_ptr)> function = [](soldier_ptr soldier){ return soldier->get_entity()->get_world_pos(); };
     return engine::math::average_position(_soldiers, function);
 }

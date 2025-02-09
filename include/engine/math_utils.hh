@@ -13,7 +13,7 @@ namespace math {
 Point average_position(std::vector<Point> points);
 
 template<typename From, typename To>
-using Producer = std::function<To(From*)>;
+using Producer = std::function<To(From)>;
 
 /**
  * For collection of `T`, returns the average position of each element.
@@ -21,7 +21,7 @@ using Producer = std::function<To(From*)>;
  * @param function a function to map `T` into `engine::math::Point`.
  */
 template<typename T>
-Point average_position(std::vector<T*> points, Producer<T, Point> function) {
+Point average_position(std::vector<T> points, Producer<T, Point> function) {
     Point center (0, 0);
     for(auto* t : points) {
         Point point = function(t);

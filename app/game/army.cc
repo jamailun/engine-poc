@@ -28,15 +28,15 @@ std::shared_ptr<Soldier> Army::create_soldier_cac(engine::math::Point position) 
     return soldierCmpt;
 }
 
-void Army::select_soldier(Soldier* soldier) {
+void Army::select_soldier(soldier_ptr soldier) {
     _selection.register_soldier(soldier);
 }
 
-void Army::select_soldiers(std::vector<Soldier*> soldiers) {
+void Army::select_soldiers(std::vector<soldier_ptr> soldiers) {
     _selection.register_soldiers(soldiers);
 }
 
-bool Army::is_selected(Soldier* soldier) {
+bool Army::is_selected(soldier_ptr soldier) {
     return _selection.contains_soldier(soldier);
 }
 

@@ -5,6 +5,7 @@
 #include <engine/sdl/game_window.hh>
 
 #include "game/army.hh"
+#include "game/game_state.hh"
 #include "game/components/army_controller.hh"
 #include "game/components/soldiers/soldier_cac.hh"
 
@@ -18,8 +19,8 @@ ArmyController::ArmyController(entity_ptr entity, std::shared_ptr<Army> army)
     : engine::base_component(entity), _army(army)
 {}
 
-static Army* get_player_army() {
-    return engine::get_engine().get_loaded_world()->player_army().get();
+static guaranteed_ptr<Army> get_player_army() {
+    return game::get_state().get_player_army();
 }
 
 void select_region(engine::math::Rect selected_rect) {

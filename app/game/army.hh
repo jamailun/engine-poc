@@ -30,11 +30,11 @@ public:
     inline const std::string& get_name() const { return _name; }
     inline const engine::Color& get_color() const { return _color; }
 
-    void select_soldier(Soldier* soldier);
-    void select_soldiers(std::vector<Soldier*> soldiers);
+    void select_soldier(soldier_ptr soldier);
+    void select_soldiers(std::vector<soldier_ptr> soldiers);
     void clear_selection();
 
-    bool is_selected(Soldier* soldier);
+    bool is_selected(soldier_ptr soldier);
 
     std::shared_ptr<Command> create_command_with_selection(engine::math::Point target);
 
