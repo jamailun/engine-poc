@@ -15,7 +15,7 @@
 
 using namespace game;
 
-ArmyController::ArmyController(entity_ptr entity, std::shared_ptr<Army> army)
+ArmyController::ArmyController(entity_ptr entity, guaranteed_ptr<Army> army)
     : engine::base_component(entity), _army(army)
 {}
 

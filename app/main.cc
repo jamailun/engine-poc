@@ -2,6 +2,7 @@
 
 #include <engine/entity.hh>
 #include <engine/engine.hh>
+#include <engine/guaranteed_ptr.hh>
 #include <engine/sdl/game_window.hh>
 #include <engine/sdl/drawer.hh>
 #include <engine/resources/resources_manager.hh>
@@ -10,7 +11,11 @@
 
 #include <spdlog/spdlog.h>
 
+#include "game/game_state.hh"
 #include "game/components/debug_components.hh"
+#include "game/components/key_controller.hh"
+#include "game/components/army_controller.hh"
+#include "game/components/paintable_region.hh"
 #include "game/configuration/args_reader.hh"
 
 void setup(guaranteed_ptr<engine::world> world);
@@ -39,10 +44,12 @@ int main(int argc, char** argv) {
 
 
 void setup(guaranteed_ptr<engine::world> world) {
-    std::shared_ptr<engine::entity> toto = world->create_entity("toto");
-    toto->create_component<component_wif>();
+    auto terrain = world->create_entity("terrain");
+    terrain->create_component<game::PaintableRegion>();
+    terrain->create_component<game::ArmyController>(game::get_state().get_player_army());
 
-    std::shared_ptr<engine::entity> titi = world->create_entity("titi");
+    auto titi = world->create_entity("titi");
     titi->create_component<engine::image_renderer>("sprite1.png");
     titi->create_component<suicide_components>();
+    titi->create_component<game::KeyController>();
 }

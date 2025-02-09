@@ -2,6 +2,7 @@
 
 #include <engine/component.hh>
 #include <engine/entity.hh>
+#include <engine/guaranteed_ptr.hh>
 #include <engine/math.hh>
 
 namespace game {
@@ -14,7 +15,7 @@ class Army;
  */
 class ArmyController : public engine::base_component {
 private:
-    std::shared_ptr<Army> _army;
+    guaranteed_ptr<Army> _army;
 
     // Selection management
     bool _selection_is_selecting = false;
@@ -23,7 +24,7 @@ private:
     void update_selection_rect();
 
 public:
-    ArmyController(entity_ptr entity, std::shared_ptr<Army> army);
+    ArmyController(entity_ptr entity, guaranteed_ptr<Army> army);
     ~ArmyController() = default;
 
     virtual void update();
