@@ -1,5 +1,8 @@
 #pragma once
 
+#include <engine/utils/memory.hh>
+#include <vector>
+
 namespace game {
 
 class Livable {
@@ -7,6 +10,8 @@ protected:
     bool _dead;
     float _max_health;
     float _health;
+
+    std::vector<callback> _death_observers;
 
     virtual void on_death() = 0;
 
@@ -68,6 +73,10 @@ public:
 
     inline bool is_alive() const { return !_dead; }
     inline bool is_dead() const { return _dead; }
+
+    void observe_death(callback observer) {
+        _death_observers.push_back(observer);
+    }
 
 };
 

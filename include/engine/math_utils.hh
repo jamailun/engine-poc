@@ -23,7 +23,7 @@ using Producer = std::function<To(From)>;
 template<typename T>
 Point average_position(std::vector<T> points, Producer<T, Point> function) {
     Point center (0, 0);
-    for(auto* t : points) {
+    for(auto& t : points) {
         Point point = function(t);
         center.x += point.x;
         center.y += point.y;

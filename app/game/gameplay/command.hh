@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 #include <vector>
-#include <SDL_rect.h>
+#include <SDL2/SDL_rect.h>
 
 namespace game {
 
@@ -36,8 +36,10 @@ public:
     bool is_valid() const;
     inline void invalidate() { _valid = false; }
 
-    float distance(soldier_ptr soldier) const;
-    engine::math::Point find_target(soldier_ptr soldier) const;
+    float distance(Soldier* soldier) const;
+    float distance(soldier_ptr soldier) const { return distance(soldier.get()); }
+    engine::math::Point find_target(Soldier* soldier) const;
+    engine::math::Point find_target(soldier_ptr soldier) const { return find_target(soldier.get()); }
 };
 
 } // namespace game

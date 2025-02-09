@@ -1,5 +1,3 @@
-#pragma once
-
 #include "./game_state.hh"
 
 using namespace game;

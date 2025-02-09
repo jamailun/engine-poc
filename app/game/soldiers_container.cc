@@ -9,15 +9,15 @@
 
 using namespace game;
 
-void SoldiersContainer::remove_soldier(soldier_ptr soldier) {
+void SoldiersContainer::remove_soldier(Soldier* soldier) {
     spdlog::debug("SoldiersContainer: removing soldier {}.", soldier->get_entity()->name());
 
-    size_t size_before = _soldiers.size();
-    _soldiers.erase(std::remove(_soldiers.begin(), _soldiers.end(), soldier), _soldiers.end());
-    
-    // we can test if it worked !
-    if(size_before != _soldiers.size())
-        soldiers_changed();
+    for(auto iter = _soldiers.begin(); iter != _soldiers.end(); ++iter) {
+        if(iter->get() == soldier) {
+            _soldiers.erase(iter);
+            return;
+        }
+    }
 }
 
 void SoldiersContainer::register_soldier(soldier_ptr soldier) {
@@ -27,8 +27,6 @@ void SoldiersContainer::register_soldier(soldier_ptr soldier) {
     }
     _soldiers.push_back(soldier);
     soldier->observe_death([this, soldier]() { remove_soldier(soldier); });
-    post_soldier_add(soldier);
-    soldiers_changed();
 }
 
 void SoldiersContainer::register_soldiers(std::vector<soldier_ptr> soldiers) {
@@ -36,8 +34,13 @@ void SoldiersContainer::register_soldiers(std::vector<soldier_ptr> soldiers) {
         register_soldier(soldier);
 }
 
-bool SoldiersContainer::contains_soldier(const soldier_ptr soldier) const {
-    return std::find(_soldiers.begin(), _soldiers.end(), soldier) != _soldiers.end();
+bool SoldiersContainer::contains_soldier(const Soldier* soldier) const {
+    for(auto iter = _soldiers.begin(); iter != _soldiers.end(); ++iter) {
+        if(iter->get() == soldier) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void SoldiersContainer::clear_soldiers() {

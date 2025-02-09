@@ -47,12 +47,12 @@ bool Command::is_valid() const {
     return true;
 }
 
-float Command::distance(soldier_ptr soldier) const {
+float Command::distance(Soldier* soldier) const {
     Point pos = soldier->get_entity()->get_transform()->get_pos();
     return Vector::diff(pos, world_point()).length();
 }
 
-engine::math::Point Command::find_target(soldier_ptr) const {
+engine::math::Point Command::find_target(Soldier*) const {
     //TODO use formations
     return _world_point;
 }

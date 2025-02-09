@@ -7,7 +7,6 @@
 #include "game/components/soldiers/soldier_cac.hh"
 
 #include <algorithm>
-#include <SDL_rect.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
 
@@ -36,7 +35,7 @@ void Army::select_soldiers(std::vector<soldier_ptr> soldiers) {
     _selection.register_soldiers(soldiers);
 }
 
-bool Army::is_selected(soldier_ptr soldier) {
+bool Army::is_selected(Soldier* soldier) const {
     return _selection.contains_soldier(soldier);
 }
 
@@ -50,7 +49,6 @@ std::shared_ptr<Command> Army::create_command_with_selection(engine::math::Point
 
     std::shared_ptr<Command> command = Command::create_move(target, _selection.get_soldiers());
 
-    spdlog::info("New command with {} soldier{}. Target = {}.", command->get_soldiers_size(), command->get_soldiers_size()>1?"s":"", target);
-
+    spdlog::info("New command with {} soldier{}. Target = ({},{}).", command->get_soldiers_size(), command->get_soldiers_size()>1?"s":"", target.x, target.y);
     return command;
 }

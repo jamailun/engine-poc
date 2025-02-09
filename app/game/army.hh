@@ -6,7 +6,7 @@
 
 #include <vector>
 #include <string>
-#include <SDL_rect.h>
+#include <SDL2/SDL_rect.h>
 
 namespace game {
 
@@ -34,7 +34,8 @@ public:
     void select_soldiers(std::vector<soldier_ptr> soldiers);
     void clear_selection();
 
-    bool is_selected(soldier_ptr soldier);
+    bool is_selected(Soldier* soldier) const;
+    bool is_selected(soldier_ptr soldier) const { return is_selected(soldier.get()); }
 
     std::shared_ptr<Command> create_command_with_selection(engine::math::Point target);
 

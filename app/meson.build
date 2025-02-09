@@ -2,25 +2,22 @@ app_headers = include_directories('.')
 
 app_sources = [
     # Components
-    'components/army_controller.cc',
-    'components/key_controller.cc',
-    'components/key_camera_controller.cc',
-    'components/army_controller.cc',
-    'components/paintable_region.cc',
-    'components/soldiers/soldier.cc',
-    'components/soldiers/soldier_cac.cc',
+    'game/components/army_controller.cc',
+    'game/components/key_controller.cc',
+    'game/components/key_camera_controller.cc',
+    'game/components/army_controller.cc',
+    'game/components/paintable_region.cc',
+    'game/components/soldiers/soldier.cc',
+    'game/components/soldiers/soldier_cac.cc',
 
     # Gameplay
-    'gameplay/command.cc',
-
-    # "Interfaces"
-    'interfaces/livable.cc',
+    'game/gameplay/command.cc',
 
     # Other
     
-    'army.cc',
-    'game_state.cc',
-    'soldier_container.cc',
+    'game/army.cc',
+    'game/game_state.cc',
+    'game/soldiers_container.cc',
 
     # Main
     'main.cc'

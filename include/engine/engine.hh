@@ -9,6 +9,7 @@
 
 #include <SDL2/SDL_events.h>
 #include <queue>
+#include <functional>
 
 namespace engine {
 

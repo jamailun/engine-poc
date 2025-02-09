@@ -5,6 +5,7 @@ engine_sources = [
     'engine/engine_loop_event.cc',
     'engine/game_camera.cc',
     'engine/math.cc',
+    'engine/world.cc',
 
     'engine/components/image_renderer.cc',
     'engine/components/transform.cc',

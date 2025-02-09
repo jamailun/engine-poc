@@ -16,18 +16,17 @@ class SoldiersContainer {
 protected:
     std::vector<soldier_ptr> _soldiers;
 
-    virtual void soldiers_changed() {/* optional overwrite */}
-    virtual void post_soldier_add(soldier_ptr soldier) {(void) soldier;/* optional overwrite */}
-
 public:
     SoldiersContainer() = default;
     virtual ~SoldiersContainer() = default;
 
-    void remove_soldier(soldier_ptr soldier);
+    void remove_soldier(Soldier* soldier);
+    void remove_soldier(soldier_ptr soldier) { remove_soldier(soldier.get()); }
     void register_soldier(soldier_ptr soldier);
     void register_soldiers(std::vector<soldier_ptr> soldiers);
     
-    bool contains_soldier(const soldier_ptr soldier) const;
+    bool contains_soldier(const Soldier* soldier) const;
+    bool contains_soldier(const soldier_ptr soldier) const { return contains_soldier(soldier.get()); }
 
     void clear_soldiers();
     inline bool is_empty() const { return _soldiers.empty(); }
