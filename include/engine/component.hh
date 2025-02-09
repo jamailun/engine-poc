@@ -21,6 +21,7 @@ concept updatable = requires(T cmpt) {
 template <typename T>
 concept renderable = requires(T cmpt) {
     { cmpt.render() } -> std::same_as<void>;
+    { cmpt.z_index() } -> std::same_as<int>;
 };
 
 /**
@@ -48,6 +49,7 @@ public:
     void destroy_now() {
         _entity = nullptr;
     }
+    virtual int z_index() const {return 0;}
 };
 
 } // namespace engine

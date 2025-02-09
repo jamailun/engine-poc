@@ -55,7 +55,7 @@ bool engine::sdl::initialize_window(configuration config) {
     // Create window
     SDL_Window* window = SDL_CreateWindow(
         config.get_screen_title().c_str(),
-        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         config.get_screen_width(), config.get_screen_height(),
         SDL_WINDOW_SHOWN
     );
@@ -77,7 +77,6 @@ bool engine::sdl::initialize_window(configuration config) {
 
     // Alpha will work
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    spdlog::debug("new renderer = {:p}", (void*)renderer);
 
     // register engine
     get_window().sdl_started(config, window, renderer);

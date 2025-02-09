@@ -57,8 +57,6 @@ void TileMap::initialize(nlohmann::json& data) {
         spdlog::critical("Could not read data from tilemap {} : {}.", get_name(), ex.what());
         return;
     }
-
-    spdlog::debug("Loaded tilemap data.");
 }
 
 void TileMap::draw_call(int x, int y) {

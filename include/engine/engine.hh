@@ -20,6 +20,9 @@ namespace math {
 
 using setup_operation = std::function<void(guaranteed_ptr<world>)>;
 
+/**
+ * Game-engine : handle update, rendering, ...
+ */
 class game_engine {
     friend game_engine& get_engine();
 private:

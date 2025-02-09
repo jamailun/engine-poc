@@ -13,6 +13,11 @@
 
 namespace engine::detail {
 
+template<component Component>
+int z_index_of_component() {
+    return 0;
+}
+
 class homogeneous_component_registry {
 public:
     virtual void remove(void* addr) = 0;
@@ -21,10 +26,13 @@ public:
 
     virtual void update_all() = 0;
     virtual void render_all() = 0;
+    virtual int static_z_index() = 0;
 
     virtual ~homogeneous_component_registry() = default;
 };
 
+// Homogeneous registries are sorted with the Z-index of the class.
+bool sort_homogeneous_component_registries(std::shared_ptr<homogeneous_component_registry> a, std::shared_ptr<homogeneous_component_registry> b);
 
 template <component Component>
 class homogeneous_component_registry_impl: public homogeneous_component_registry {
@@ -75,6 +83,10 @@ public:
             });
         }
     }
+
+    int static_z_index() override {
+        return z_index_of_component<Component>();
+    }
 };
 
 } // namespace engine::detail
@@ -85,6 +97,7 @@ namespace engine {
 class component_registry {
 private:
     std::unordered_map<std::type_index, std::shared_ptr<detail::homogeneous_component_registry>> _sub_registries;
+    std::vector<std::shared_ptr<detail::homogeneous_component_registry>> _z_index_sorted_registries;
 public:
     component_registry() = default;
     ~component_registry() {
@@ -106,6 +119,10 @@ public:
         } else {
             sub_registry = std::make_shared<sub_registry_impl>();
             _sub_registries.insert({tidx, sub_registry});
+            // add to z_index_sorted
+            _z_index_sorted_registries.push_back(sub_registry);
+            // SORT !
+            std::sort(_z_index_sorted_registries.begin(), _z_index_sorted_registries.end(), engine::detail::sort_homogeneous_component_registries);
         }
         sub_registry->add(cmpt);
     }
@@ -132,8 +149,8 @@ public:
     }
 
     void render_all() {
-        for(auto& e: _sub_registries) {
-            e.second->render_all();
+        for(auto& e: _z_index_sorted_registries) {
+            e->render_all();
         }
     }
 

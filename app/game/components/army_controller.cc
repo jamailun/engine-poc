@@ -80,3 +80,9 @@ void ArmyController::update() {
         get_player_army()->create_command_with_selection(pos);
     }
 }
+
+//
+template<>
+int engine::detail::z_index_of_component<ArmyController>() {
+    return 1000;
+}

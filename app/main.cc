@@ -20,8 +20,10 @@
 
 void setup(guaranteed_ptr<engine::world> world);
 
+game::argument_read_output program_config;
+
 int main(int argc, char** argv) {
-    auto program_config = game::read_arguments(argc, argv);
+    program_config = game::read_arguments(argc, argv);
     spdlog::info("POC Started.");
 
     // Initialize window
@@ -44,9 +46,13 @@ int main(int argc, char** argv) {
 
 
 void setup(guaranteed_ptr<engine::world> world) {
+    int width = program_config.config.screen_width;
+    int height = program_config.config.screen_height;
+
     auto terrain = world->create_entity("terrain");
-    terrain->create_component<game::PaintableRegion>();
+    terrain->create_component<game::PaintableRegion>(width, height);
     terrain->create_component<game::ArmyController>(game::get_state().get_player_army());
+    //terrain->get_transform()->set_pos(-width/2, -height/2);
 
     auto titi = world->create_entity("titi");
     titi->create_component<engine::image_renderer>("sprite1.png");

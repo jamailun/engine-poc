@@ -56,3 +56,9 @@ void PaintableRegion::render() {
         &draw_rect
     );
 }
+
+//
+template<>
+int engine::detail::z_index_of_component<PaintableRegion>() {
+    return 1;
+}

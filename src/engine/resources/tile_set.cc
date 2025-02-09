@@ -61,8 +61,6 @@ void TileSet::initialize(nlohmann::json& data) {
             rect.h = _cell_height;
         }
     }
-
-    spdlog::debug("Loaded tileset image. Count=({}/{}).", _count_cols, _count_lines);
 }
 
 SDL_Rect& TileSet::get(int id) {

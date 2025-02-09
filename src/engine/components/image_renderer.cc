@@ -23,3 +23,9 @@ void image_renderer::initialize(std::string image_id) {
     _image = engine::resources::get_manager().find_image(image_id);
     if(!_image.is_valid()) spdlog::error("Invalid Image. ImageRenderer could not locate Image '{}'.", image_id);
 }
+
+//
+template<>
+int engine::detail::z_index_of_component<image_renderer>() {
+    return 20;
+}

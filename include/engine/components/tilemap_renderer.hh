@@ -23,6 +23,7 @@ public:
     
     // render call
     void render();
+    int z_index() const { return 10; }
 
     inline bool is_valid() const {
         return _tilemap.is_valid();

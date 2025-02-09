@@ -13,7 +13,7 @@ private:
     guaranteed_ptr<resources::Image> _image;
     SDL_Rect _display_rect;
 
-    int _z_index = 3;
+    int _z_index = 20;
 
 public:
     image_renderer(entity_ptr entity) : base_component(entity) {}

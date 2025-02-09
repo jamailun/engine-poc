@@ -19,3 +19,9 @@ void tilemap_renderer::initialize(std::string tm_name) {
     _tilemap = engine::resources::get_manager().find_tile_map(tm_name);
     if(!_tilemap.is_valid()) spdlog::error("Invalid TileMap. TileMapRenderer could not locate TileMap '{}'.", tm_name);
 }
+
+//
+template<>
+int engine::detail::z_index_of_component<tilemap_renderer>() {
+    return 10;
+}
