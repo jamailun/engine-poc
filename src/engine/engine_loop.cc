@@ -26,7 +26,7 @@ void game_engine::start() {
             on_loop_event(event);
 
         // render + update
-        on_loop_update();
+        // done by thread on_loop_update();
         on_loop_render();
         
         // Update screen (buffer swapping)

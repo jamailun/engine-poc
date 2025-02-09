@@ -1,13 +1,26 @@
 #include <engine/engine.hh>
 #include <engine/sdl/game_window.hh>
 #include <engine/sdl/drawer.hh>
+#include <engine/utils/stopwatch.hh>
 
 #include <spdlog/spdlog.h>
+
+#include <thread>
 
 using namespace engine;
 
 game_engine::game_engine() {
     _current_world = std::make_shared<world>("default");
+}
+
+void start_thread_method(std::function<void(void)> method) {
+    stopwatch<std::chrono::system_clock> timer;
+    timer.set_callback([method](auto elapsed) {
+        (void) elapsed;
+        method();
+    });
+    timer.set_stop_condition([](){return engine::get_engine().running();});
+    timer.start_blocking();
 }
 
 void game_engine::on_loop_initialize() {
@@ -24,6 +37,11 @@ void game_engine::on_loop_initialize() {
     for(auto& operation : _setup_operations) {
         operation(_current_world.get());
     }
+
+    // Start update thread
+    spdlog::info("Starting update thread.");
+    std::thread(start_thread_method, "update_loop", [this](){ this->on_loop_update(); }).detach();
+    spdlog::info("update thread started.");
 }
 
 void game_engine::on_loop_shutdown() {

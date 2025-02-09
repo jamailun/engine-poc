@@ -32,13 +32,13 @@ void Inputs::unpressed(SDL_Scancode button) {
 
 void Inputs::mouse_up(uint8_t button) {
     _button_pressed[button].pressed = false;
-    spdlog::trace("inputs::mouse_up({})", button);
+    // spdlog::trace("inputs::mouse_up({})", button);
 }
 
 void Inputs::mouse_down(SDL_MouseButtonEvent& mouseEvent) {
     uint8_t button = mouseEvent.button;
-    spdlog::trace("inputs::mouse_down({})", button);
-    spdlog::trace("inputs::timestamp={}", mouseEvent.timestamp);
+    // spdlog::trace("inputs::mouse_down({})", button);
+    // spdlog::trace("inputs::timestamp={}", mouseEvent.timestamp);
     _button_pressed[button].pressed = true;
     _button_pressed[button].timestamp = mouseEvent.timestamp;
     _button_pressed[button].x = mouseEvent.x;

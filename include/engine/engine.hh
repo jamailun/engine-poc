@@ -98,6 +98,7 @@ public:
     math::Point world_to_camera(math::Point world_pos) const;
     math::Point camera_to_world(float x, float y) const { return camera_to_world(math::Point(x, y)); }
     math::Point camera_to_world(math::Point camera_pos) const;
+    bool running() const { return _running; }
     
     // ---- queues
 
