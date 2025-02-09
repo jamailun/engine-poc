@@ -32,11 +32,13 @@ void Inputs::unpressed(SDL_Scancode button) {
 
 void Inputs::mouse_up(uint8_t button) {
     _button_pressed[button].pressed = false;
+    spdlog::trace("inputs::mouse_up({})", button);
 }
 
 void Inputs::mouse_down(SDL_MouseButtonEvent& mouseEvent) {
     uint8_t button = mouseEvent.button;
-    // spdlog::trace("inputs::mouse_down({})", button);
+    spdlog::trace("inputs::mouse_down({})", button);
+    spdlog::trace("inputs::timestamp={}", mouseEvent.timestamp);
     _button_pressed[button].pressed = true;
     _button_pressed[button].timestamp = mouseEvent.timestamp;
     _button_pressed[button].x = mouseEvent.x;
@@ -60,7 +62,8 @@ bool Inputs::is_mouse_button_up(uint8_t button) const {
 }
 
 bool Inputs::is_clicking(uint8_t button) const {
-    return is_mouse_button_down(button) && SDL_GetTicks() - _button_pressed[button].timestamp < 5;
+//    spdlog::trace("click ? diff={}, success={}", SDL_GetTicks() - _button_pressed[button].timestamp, SDL_GetTicks() - _button_pressed[button].timestamp < 5 ? "true" : "false");
+    return is_mouse_button_down(button) && SDL_GetTicks() - _button_pressed[button].timestamp < 100;
 }
 
 

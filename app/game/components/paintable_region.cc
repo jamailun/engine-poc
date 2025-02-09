@@ -60,5 +60,5 @@ void PaintableRegion::render() {
 //
 template<>
 int engine::detail::z_index_of_component<PaintableRegion>() {
-    return 1;
+    return -10;
 }

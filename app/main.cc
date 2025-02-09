@@ -14,6 +14,7 @@
 #include "game/game_state.hh"
 #include "game/components/debug_components.hh"
 #include "game/components/key_controller.hh"
+#include "game/components/key_camera_controller.hh"
 #include "game/components/army_controller.hh"
 #include "game/components/paintable_region.hh"
 #include "game/configuration/args_reader.hh"
@@ -52,10 +53,11 @@ void setup(guaranteed_ptr<engine::world> world) {
     auto terrain = world->create_entity("terrain");
     terrain->create_component<game::PaintableRegion>(width, height);
     terrain->create_component<game::ArmyController>(game::get_state().get_player_army());
-    //terrain->get_transform()->set_pos(-width/2, -height/2);
+    terrain->create_component<game::KeyCameraController>();
+    terrain->get_transform()->set_pos(-width/2, -height/2);
 
-    auto titi = world->create_entity("titi");
-    titi->create_component<engine::image_renderer>("sprite1.png");
-    titi->create_component<suicide_components>();
-    titi->create_component<game::KeyController>();
+    // auto titi = world->create_entity("titi");
+    // titi->create_component<engine::image_renderer>("sprite1.png");
+    // titi->create_component<suicide_components>();
+    // titi->create_component<game::KeyController>();
 }
