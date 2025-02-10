@@ -11,9 +11,10 @@ namespace engine {
 template<typename Clock>
 class timer {
     using time_unit = std::chrono::time_point<Clock>;
+    using duration_unit = std::chrono::duration<Clock>;
 private:
-    time_t _started_time;
-    time_t _ended_time;
+    time_unit _started_time;
+    time_unit _ended_time;
     bool _running = false;
 
 public:
@@ -38,12 +39,13 @@ public:
     bool running() const {
         return _running;
     }
-    time_unit elapsed() {
+    uint64_t elapsed_millis() const {
         time_unit end = _running ? Clock::now() : _ended_time;
-        return end - _started_time;
+        return std::chrono::duration_cast<std::chrono::milliseconds>(end - _started_time).count();
     }
-    uint64_t elapsed_millis() {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(elapsed()).count();
+    float elapsed_secs() const {
+        float ms_value = elapsed_millis();
+        return ms_value / 1000.0;
     }
 
 };

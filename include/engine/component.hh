@@ -15,7 +15,7 @@ concept base_component_concept = requires(T cmpt) {
 
 template <typename T>
 concept updatable = requires(T cmpt) {
-    { cmpt.update() } -> std::same_as<void>;
+    { cmpt.update(float()) } -> std::same_as<void>;
 };
 
 template <typename T>

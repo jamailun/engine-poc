@@ -61,7 +61,7 @@ void ArmyController::render() {
     }
 }
 
-void ArmyController::update() {
+void ArmyController::update(float) {
     // selection
     update_selection_rect();
     

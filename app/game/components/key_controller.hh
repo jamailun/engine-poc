@@ -19,7 +19,7 @@ public:
     inline float speed() const { return _speed; }
     inline void speed(float speed) { _speed = speed; }
 
-    virtual void update();
+    virtual void update(float elapsed);
 };
 
 } // namespace game

@@ -29,7 +29,7 @@ public:
 
     void move(float dx, float dy);
     inline void move(math::Vector vector) { move(vector.dx, vector.dy); }
-    inline void update() {}
+    inline void update(float) {}
 
     math::Point to_camera_pos() const;
 };

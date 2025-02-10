@@ -24,7 +24,7 @@ public:
     virtual void clear() = 0;
     virtual size_t size() const = 0;
 
-    virtual void update_all() = 0;
+    virtual void update_all(float elapsed) = 0;
     virtual void render_all() = 0;
     virtual int static_z_index() = 0;
 
@@ -68,10 +68,10 @@ public:
         return _components.size();
     }
 
-    void update_all() override {
+    void update_all(float elapsed) override {
         if constexpr(updatable<Component>) {
-            std::for_each(_components.begin(), _components.end(), [](std::shared_ptr<Component>& cmpt) {
-                cmpt->update();
+            std::for_each(_components.begin(), _components.end(), [elapsed](std::shared_ptr<Component>& cmpt) {
+                cmpt->update(elapsed);
             });
         }
     }
@@ -142,9 +142,9 @@ public:
         reg->remove(raw);
     }
 
-    void update_all() {
+    void update_all(float elapsed) {
         for(auto& e: _sub_registries) {
-            e.second->update_all();
+            e.second->update_all(elapsed);
         }
     }
 

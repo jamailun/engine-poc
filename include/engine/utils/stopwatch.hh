@@ -10,18 +10,18 @@ namespace engine {
  */
 template<typename Clock>
 class stopwatch {
-    using time_unit = std::chrono::time_point<Clock>;
-    using consumer_t = std::function<void(time_unit)>;
+    using duration_unit = float; // seconds
+    using consumer_t = std::function<void(duration_unit)>;
 private:
     timer<Clock> _timer;
-    consumer_t _callback = [](time_unit){};
+    consumer_t _callback = [](duration_unit){};
     supplier<bool> _stop_condition = [](){return false;};
-    time_unit _duration;
+    float _duration;
 
     bool _running = false;
 
 public:
-    stopwatch() = default;
+    stopwatch(float duration) : _duration(duration) {};
     ~stopwatch() = default;
 
     void start_blocking() {
@@ -29,8 +29,8 @@ public:
 
         _timer.start();
         while(_running && !_stop_condition()) {
-            if(_timer.elapsed() >= _duration) {
-                _callback(_timer.elapsed());
+            if(_timer.elapsed_secs() >= _duration) {
+                _callback(_timer.elapsed_secs());
                 _timer.restart();
             }
         }
@@ -49,8 +49,16 @@ public:
         _stop_condition = stop_condition;
     }
 
+    void set_duration(duration_unit duration) {
+        _duration = duration;
+    }
+    
+    void set_duration_of_millis(uint64_t millis) {
+        _duration = ((float)millis) / 1000.0;
+    }
+
 };
 
-using system_timer = timer<std::chrono::system_clock>;
+using system_stopwatch = stopwatch<std::chrono::system_clock>;
 
 } // namespace engine

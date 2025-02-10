@@ -27,7 +27,7 @@ public:
     ArmyController(entity_ptr entity, guaranteed_ptr<Army> army);
     ~ArmyController() = default;
 
-    virtual void update();
+    virtual void update(float);
     virtual void render();
 };
 

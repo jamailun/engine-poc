@@ -6,7 +6,7 @@
 
 using namespace game;
 
-void KeyCameraController::update() {
+void KeyCameraController::update(float elapsed) {
     float dx = 0;
     float dy = 0;
 
@@ -20,5 +20,5 @@ void KeyCameraController::update() {
     if(inputs.is_key_pressed(SDL_SCANCODE_S))
         dy += 1;
     
-    engine::get_engine().camera().move(dx, dy);
+    engine::get_engine().camera().move(dx * elapsed, dy * elapsed);
 }

@@ -13,14 +13,13 @@ game_engine::game_engine() {
     _current_world = std::make_shared<world>("default");
 }
 
-void start_thread_method(std::function<void(void)> method) {
-    stopwatch<std::chrono::system_clock> timer;
-    timer.set_callback([method](auto elapsed) {
-        (void) elapsed;
-        method();
+void start_thread_method(std::function<void(float)> method) {
+    system_stopwatch clock (0.1f);
+    clock.set_callback([method](float elapsed) {
+        method(elapsed);
     });
-    timer.set_stop_condition([](){return engine::get_engine().running();});
-    timer.start_blocking();
+    clock.set_stop_condition([](){return engine::get_engine().running();});
+    clock.start_blocking();
 }
 
 void game_engine::on_loop_initialize() {
@@ -40,7 +39,7 @@ void game_engine::on_loop_initialize() {
 
     // Start update thread
     spdlog::info("Starting update thread.");
-    std::thread(start_thread_method, "update_loop", [this](){ this->on_loop_update(); }).detach();
+    std::thread(start_thread_method, [this](float elapsed){ this->on_loop_update(elapsed); }).detach();
     spdlog::info("update thread started.");
 }
 
@@ -49,8 +48,8 @@ void game_engine::on_loop_shutdown() {
 }
 
 // render + update
-void game_engine::on_loop_update() {
-    _registry.update_all();
+void game_engine::on_loop_update(float elapsed) {
+    _registry.update_all(elapsed);
 }
 void game_engine::on_loop_render() {
     // Clear screen

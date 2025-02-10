@@ -7,7 +7,7 @@
 
 using namespace game;
 
-void KeyController::update() {
+void KeyController::update(float elapsed) {
     engine::math::Vector dir;
 
     const engine::Inputs& inputs = engine::get_inputs();
@@ -20,5 +20,5 @@ void KeyController::update() {
     if(inputs.is_key_pressed(SDL_SCANCODE_DOWN))
         dir.dy += 1;
     
-    get_entity()->get_transform()->move(dir.normalized() * _speed);
+    get_entity()->get_transform()->move(dir.normalized() * _speed * elapsed);
 }

@@ -48,7 +48,7 @@ private:
     void on_loop_shutdown();
     // Loop : each iteration/event
     void on_loop_event(SDL_Event& event);
-    void on_loop_update();
+    void on_loop_update(float elapsed);
     void on_loop_render();
 
 public:

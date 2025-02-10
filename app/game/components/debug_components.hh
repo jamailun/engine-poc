@@ -20,9 +20,9 @@ public:
             engine::drawer::draw_rect_center(transform->get_pos(), 25, 25, engine::colors::yellow);
         }
     }
-    void update() {
+    void update(float elapsed) {
         if(auto transform = get_entity()->get_component<engine::transform>()) {
-            transform->move(2, -1);
+            transform->move(2 * elapsed, -1 * elapsed);
         }
     }
 };
@@ -30,7 +30,7 @@ public:
 class suicide_components : public engine::base_component {
 public:
     suicide_components(entity_ptr entity) : base_component(entity) {}
-    void update() {
+    void update(float) {
         const auto& inputs = engine::get_inputs();
         if(inputs.is_key_pressed(SDL_Scancode::SDL_SCANCODE_DELETE)) {
             spdlog::debug("pressed delete.");
