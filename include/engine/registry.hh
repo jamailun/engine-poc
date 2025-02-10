@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <vector>
 #include <iostream>
+#include <mutex>
 
 #include "engine/component.hh"
 
@@ -38,6 +39,7 @@ template <component Component>
 class homogeneous_component_registry_impl: public homogeneous_component_registry {
 private:
     std::vector<std::shared_ptr<Component>> _components;
+    std::mutex _components_mutex;
 public:
     virtual ~homogeneous_component_registry_impl() = default;
 
@@ -45,23 +47,29 @@ public:
         if(cmpt == nullptr) {
             throw std::runtime_error("Cannot register null component");
         }
+        _components_mutex.lock();
         const auto it = std::find(_components.begin(), _components.end(), cmpt);
         if(it == _components.end()) {
             _components.push_back(cmpt);
         }
+        _components_mutex.unlock();
     }
 
     void remove(void* addr) override {
+        _components_mutex.lock();
         auto it = std::find_if(_components.begin(), _components.end(), [addr](const std::shared_ptr<Component>& cmpt) {
             return addr == static_cast<void*>(cmpt.get());
         });
         if(it != _components.end()) {
             _components.erase(it);
         }
+        _components_mutex.unlock();
     }
 
     void clear() override {
+        _components_mutex.lock();
         _components.clear();
+        _components_mutex.unlock();
     }
 
     inline size_t size() const override {
@@ -70,17 +78,21 @@ public:
 
     void update_all(float elapsed) override {
         if constexpr(updatable<Component>) {
+            _components_mutex.lock();
             std::for_each(_components.begin(), _components.end(), [elapsed](std::shared_ptr<Component>& cmpt) {
-                cmpt->update(elapsed);
+                if(cmpt) cmpt->update(elapsed);
             });
+            _components_mutex.unlock();
         }
     }
 
     void render_all() override {
         if constexpr(renderable<Component>) {
+            _components_mutex.lock();
             std::for_each(_components.begin(), _components.end(), [](std::shared_ptr<Component>& cmpt) {
-                cmpt->render();
+                if(cmpt) cmpt->render();
             });
+            _components_mutex.unlock();
         }
     }
 

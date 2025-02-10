@@ -1,5 +1,6 @@
 #pragma once
 
+#include <engine/guaranteed_ptr.hh>
 #include <engine/component.hh>
 #include <engine/sdl/colors.hh>
 
@@ -18,7 +19,7 @@ class Command; // fwd
 class Soldier : public engine::base_component, public Livable {
     friend class Command;
 private:
-    Army* _army;
+    guaranteed_ptr<Army> _army;
     float _radius;
     float _half_radius;
 protected:
@@ -30,7 +31,7 @@ protected:
     virtual void on_death();
 
 public:
-    Soldier(entity_ptr entity, Army* army, float speed, float radius);
+    Soldier(entity_ptr entity, guaranteed_ptr<Army> army, float speed, float radius);
     virtual ~Soldier() = default; // polymorphism
 
     inline float get_speed() const { return _speed; }

@@ -40,8 +40,8 @@ int main(int argc, char** argv) {
     }
 
     // Initialize world
-    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
-    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
+    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
+    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
 
     // Start engine
     engine::get_engine().start();

@@ -14,7 +14,7 @@
 
 using namespace game;
 
-Soldier::Soldier(entity_ptr entity, Army* army, float speed, float radius)
+Soldier::Soldier(entity_ptr entity, guaranteed_ptr<Army> army, float speed, float radius)
     : base_component(entity), Livable(100), _army(army), _radius(radius), _speed(speed)
 {}
 
