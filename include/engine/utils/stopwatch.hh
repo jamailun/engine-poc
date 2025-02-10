@@ -26,6 +26,7 @@ public:
 
     void start_blocking() {
         if(_running) return;
+        _running = true;
 
         _timer.start();
         while(_running && !_stop_condition()) {

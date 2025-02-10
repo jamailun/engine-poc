@@ -16,3 +16,10 @@ meson setup build_release --buildtype=release
 cd build_debug
 ninja
 ```
+
+### Run (debug)
+
+```bash
+cd build_debug
+clear && ninja && LSAN_OPTIONS=suppressions=${PWD}/../asan_supp.txt ./app/engine-test -a ${PWD}/../assets
+```

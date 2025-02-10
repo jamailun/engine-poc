@@ -20,6 +20,7 @@
 #include "game/configuration/args_reader.hh"
 
 void setup(guaranteed_ptr<engine::world> world);
+void setup_test(guaranteed_ptr<engine::world> world);
 
 game::argument_read_output program_config;
 
@@ -39,7 +40,8 @@ int main(int argc, char** argv) {
     }
 
     // Initialize world
-    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
+    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
+    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
 
     // Start engine
     engine::get_engine().start();
@@ -55,9 +57,11 @@ void setup(guaranteed_ptr<engine::world> world) {
     terrain->create_component<game::ArmyController>(game::get_state().get_player_army());
     terrain->create_component<game::KeyCameraController>();
     terrain->get_transform()->set_pos(-width/2, -height/2);
+}
 
-    // auto titi = world->create_entity("titi");
-    // titi->create_component<engine::image_renderer>("sprite1.png");
-    // titi->create_component<suicide_components>();
-    // titi->create_component<game::KeyController>();
+void setup_test(guaranteed_ptr<engine::world> world) {
+    auto toto = world->create_entity("toto");
+    toto->create_component<engine::image_renderer>("sprite1.png");
+    toto->create_component<suicide_components>();
+    toto->create_component<game::KeyController>(200);
 }

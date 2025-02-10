@@ -14,11 +14,12 @@ game_engine::game_engine() {
 }
 
 void start_thread_method(std::function<void(float)> method) {
-    system_stopwatch clock (0.1f);
+    system_stopwatch clock (1.0f / 60.0);
     clock.set_callback([method](float elapsed) {
+        spdlog::trace("Frame: {}s.", elapsed);
         method(elapsed);
     });
-    clock.set_stop_condition([](){return engine::get_engine().running();});
+    clock.set_stop_condition([](){return !engine::get_engine().running();});
     clock.start_blocking();
 }
 
