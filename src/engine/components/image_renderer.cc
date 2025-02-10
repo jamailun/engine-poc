@@ -6,7 +6,7 @@
 #include <engine/resources/resources_manager.hh>
 
 #include <spdlog/spdlog.h>
-#include <SDL_render.h>
+#include <SDL2/SDL_render.h>
 #include <sstream>
 
 using namespace engine;

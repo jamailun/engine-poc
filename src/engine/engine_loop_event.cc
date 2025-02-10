@@ -1,7 +1,7 @@
 #include <engine/engine.hh>
 #include <spdlog/spdlog.h>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 using namespace engine;
 

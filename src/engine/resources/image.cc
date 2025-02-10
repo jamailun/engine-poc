@@ -1,7 +1,7 @@
 #include <engine/resources/image.hh>
 #include <engine/sdl/game_window.hh>
 
-#include <SDL_image.h>
+#include <SDL2/SDL_image.h>
 #include <spdlog/spdlog.h>
 
 using namespace engine;

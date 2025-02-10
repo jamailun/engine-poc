@@ -3,7 +3,7 @@
 
 #include <engine/sdl/game_window.hh>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <spdlog/spdlog.h>
 
 using namespace engine;

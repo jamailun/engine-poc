@@ -7,7 +7,7 @@
 #include <spdlog/spdlog.h>
 #include "nlohmann/json.hpp"
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 using namespace engine;
 using namespace resources;
