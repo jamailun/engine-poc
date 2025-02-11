@@ -3,6 +3,7 @@
 
 #include <spdlog/spdlog.h>
 #include <SDL2/SDL.h>
+#include <engine/utils/timer.hh>
 
 using namespace engine;
 
@@ -20,6 +21,8 @@ void game_engine::start() {
 
     SDL_Event event;
     spdlog::info("GameEngine started.");
+    system_timer timer;
+    timer.start();
     while(_running) {
         // Poll events from window
         while (SDL_PollEvent(&event))
@@ -28,6 +31,12 @@ void game_engine::start() {
         // render + update
         // done by thread on_loop_update();
         on_loop_render();
+        float elapsed = timer.elapsed_secs();
+        if(elapsed >= 0.016f) {
+            // spdlog::trace("elapsed = {:4}s", elapsed);
+            on_loop_update(elapsed);
+            timer.lap();
+        }
         
         // Update screen (buffer swapping)
         SDL_RenderPresent(sdl::get_renderer());

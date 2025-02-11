@@ -39,9 +39,9 @@ void game_engine::on_loop_initialize() {
     }
 
     // Start update thread
-    spdlog::info("Starting update thread.");
-    std::thread(start_thread_method, [this](float elapsed){ this->on_loop_update(elapsed); }).detach();
-    spdlog::info("update thread started.");
+    // spdlog::info("Starting update thread.");
+    // std::thread(start_thread_method, [this](float elapsed){ this->on_loop_update(elapsed); }).detach();
+    // spdlog::info("update thread started.");
 }
 
 void game_engine::on_loop_shutdown() {

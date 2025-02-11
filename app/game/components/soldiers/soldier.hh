@@ -21,13 +21,12 @@ class Soldier : public engine::base_component, public Livable {
 private:
     guaranteed_ptr<Army> _army;
     float _radius;
-    float _half_radius;
+    bool _selected = false;
 protected:
     float _speed;
     std::shared_ptr<Command> _command;
 
-    inline void set_radius(float radius) { _radius = radius; _half_radius = radius / 2; }
-    
+    inline void set_radius(float radius) { _radius = radius; }
     virtual void on_death();
 
 public:
@@ -44,7 +43,10 @@ public:
     virtual bool can_update() const { return true; }
     virtual bool can_render() const { return true; }
     virtual void render();
-    virtual void update();
+    virtual void update(float elapsed);
+
+    virtual bool is_selected() const { return _selected; }
+    virtual void set_selected(bool selected) { _selected = selected; }
 
 };
 

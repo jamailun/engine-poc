@@ -18,12 +18,12 @@ Soldier::Soldier(entity_ptr entity, guaranteed_ptr<Army> army, float speed, floa
     : base_component(entity), Livable(100), _army(army), _radius(radius), _speed(speed)
 {}
 
-void Soldier::update() {
+void Soldier::update(float elapsed) {
     engine::math::Point pos = get_entity()->get_world_pos();
     if(has_command()) {
         engine::math::Vector dir = engine::math::Vector::diff(pos, _command->find_target(this));
         if(dir.squared_length() > 25) {
-            engine::math::Vector movement = dir.normalized() * _speed;
+            engine::math::Vector movement = dir.normalized() * _speed * elapsed;
             get_entity()->get_transform()->move(movement);
             return;
         }
@@ -43,13 +43,13 @@ void Soldier::update() {
         delta = delta - dir.normalized_r();
        // spdlog::trace("{} >{}< {}", _owner_entity->get_name(), dir.length(), other->get_name());
     }
-    engine::math::Vector movement = delta * (_speed * 0.3);
+    engine::math::Vector movement = delta * (elapsed * _speed * 0.35);
     get_entity()->get_transform()->move(movement);
 }
 
 void Soldier::render() {
     // if selected ?
-    if(_army->is_selected(this)) {
+    if(is_selected()) {
         engine::drawer::fill_rect_center(get_entity()->get_transform()->get_pos(), _radius + 2, _radius + 2, engine::colors::yellow);
     }
 

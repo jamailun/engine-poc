@@ -26,7 +26,6 @@ void SoldiersContainer::register_soldier(soldier_ptr soldier) {
         return;
     }
     _soldiers.push_back(soldier);
-    soldier->observe_death([this, soldier]() { remove_soldier(soldier); });
 }
 
 void SoldiersContainer::register_soldiers(std::vector<soldier_ptr> soldiers) {

@@ -5,7 +5,7 @@
 
 using namespace game;
 
-const float CAC_SPEED = 0.9;
+const float CAC_SPEED = 100;
 const float CAC_RADIUS = 6;
 
 SoldierCac::SoldierCac(entity_ptr entity, guaranteed_ptr<Army> army)

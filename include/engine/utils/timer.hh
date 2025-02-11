@@ -21,6 +21,10 @@ public:
     timer() = default;
     ~timer() = default;
 
+    void lap() {
+        if(_running)
+            _started_time = Clock::now();
+    }
     void restart() {
         _started_time = Clock::now();
         _running = true;
