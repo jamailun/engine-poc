@@ -48,6 +48,18 @@ private:
         }
     }
 
+    void merge() {
+        if(!is_split()) return;
+
+        for(auto& child : _children) {
+            for(auto& element : child->_elements) {
+                _elements.push_back(std::move(element));
+            }
+            child->_elements.clear();
+        }
+        _children.clear();
+    }
+
     std::string to_string(int index) const {
         std::stringstream ss;
         ss << std::string(index, ' ');
@@ -64,7 +76,7 @@ private:
     }
 
 public:
-    quad_tree(math::Rect bounds, size_t max_elements) : _bounds(bounds), _max_elements(max_elements), _max_depth(max_depth), _depth(0) {}
+    quad_tree(math::Rect bounds, size_t max_elements, size_t max_depth) : _bounds(bounds), _max_elements(max_elements), _max_depth(max_depth), _depth(0) {}
     quad_tree(math::Rect bounds, size_t max_elements) : quad_tree(bounds, max_elements, 4) {}
     quad_tree(math::Rect bounds) : quad_tree(bounds, 12) {}
 
@@ -89,6 +101,33 @@ public:
                 split();
             }
         }
+    }
+
+    bool remove(const T& object) {
+        math::Point point = object.get_pos();
+        if(is_split()) {
+            for(auto& child : _children) {
+                if(child->bounds().contains(point)) {
+                    bool removed = child->remove(std::move(object));
+                    if(removed) {
+                        if(size() < _max_elements) {
+                            merge();
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+        // Not split
+        if(_bounds.contains(point)) {
+            auto iter = std::find(_elements.begin(), _elements.end(), object);
+            if(iter != _elements.end()) {
+                _elements.erase(iter);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
