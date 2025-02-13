@@ -4,6 +4,7 @@
 #include <engine/sdl/game_window.hh>
 
 #include "./paintable_region.hh"
+#include "../game_state.hh"
 
 #include <spdlog/spdlog.h>
 
@@ -55,6 +56,18 @@ void PaintableRegion::render() {
         &_texture_rect,
         &draw_rect
     );
+
+    // render quadtree
+    game::get_state().get_player_army()->draw_quadtree();
+}
+
+float last = 0;
+void PaintableRegion::update(float delta) {
+    last += delta;
+    if(last > 0.5f) {
+        last = 0;
+        game::get_state().get_player_army()->update_quad_tree();
+    }
 }
 
 //

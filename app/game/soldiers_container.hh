@@ -16,6 +16,9 @@ class SoldiersContainer {
 protected:
     std::vector<soldier_ptr> _soldiers;
 
+    virtual void post_add(soldier_ptr) {/* Default */}
+    virtual void post_rem(soldier_ptr) {/* Default */}
+
 public:
     SoldiersContainer() = default;
     virtual ~SoldiersContainer() = default;

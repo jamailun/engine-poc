@@ -1,6 +1,7 @@
 #pragma once
 
 #include <engine/sdl/colors.hh>
+#include <engine/utils/quadtree.hh>
 #include "./soldiers_container.hh"
 #include "./components/soldiers/soldier.hh"
 
@@ -10,12 +11,19 @@
 
 namespace game {
 
+using QuadTree = engine::quad_tree<soldier_ptr>;
+
 class Army : public SoldiersContainer {
     std::string _name;
     engine::Color _color;
     bool _user_controlled = false;
 
     SoldiersContainer _selection;
+    QuadTree _quad_tree;
+
+protected:
+    void post_add(soldier_ptr soldier);
+    void post_rem(soldier_ptr soldier);
 
 public:
     Army(std::string name, engine::Color color, bool user_controlled);
@@ -38,6 +46,9 @@ public:
     bool is_selected(soldier_ptr soldier) const { return is_selected(soldier.get()); }
 
     std::shared_ptr<Command> create_command_with_selection(engine::math::Point target);
+
+    void draw_quadtree() const;
+    void update_quad_tree();
 
 };
 

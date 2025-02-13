@@ -40,6 +40,8 @@ public:
     void set_command(std::shared_ptr<Command> command);
     inline bool has_command() const;
 
+    guaranteed_ptr<Army> army() { return _army; }
+
     virtual bool can_update() const { return true; }
     virtual bool can_render() const { return true; }
     virtual void render();

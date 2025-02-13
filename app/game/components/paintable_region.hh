@@ -25,6 +25,7 @@ public:
     PaintableRegion(entity_ptr entity, uint32_t width, uint32_t height);
     ~PaintableRegion();
     
+    virtual void update(float elapsed);
     virtual void render();
 
 };

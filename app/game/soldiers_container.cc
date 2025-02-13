@@ -14,6 +14,7 @@ void SoldiersContainer::remove_soldier(Soldier* soldier) {
 
     for(auto iter = _soldiers.begin(); iter != _soldiers.end(); ++iter) {
         if(iter->get() == soldier) {
+            post_rem(*iter);
             _soldiers.erase(iter);
             return;
         }
@@ -26,6 +27,7 @@ void SoldiersContainer::register_soldier(soldier_ptr soldier) {
         return;
     }
     _soldiers.push_back(soldier);
+    post_add(soldier);
 }
 
 void SoldiersContainer::register_soldiers(std::vector<soldier_ptr> soldiers) {
@@ -43,6 +45,9 @@ bool SoldiersContainer::contains_soldier(const Soldier* soldier) const {
 }
 
 void SoldiersContainer::clear_soldiers() {
+    for(auto& sol : _soldiers) {
+        post_rem(sol);
+    }
     _soldiers.clear();
 }
 

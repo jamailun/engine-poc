@@ -12,8 +12,18 @@
 
 using namespace game;
 
+static engine::math::Point get_pos(const soldier_ptr soldier) {
+    spdlog::trace("getting pos of soldier in army {}...", soldier->army()->get_name());
+    if( ! soldier->get_entity().is_valid()) {
+        spdlog::warn("Invalid soldier ??");
+        return engine::math::Point(0);
+    }
+    return soldier->get_entity()->get_world_pos();
+}
+
 Army::Army(std::string name, engine::Color color, bool user_controlled)
-    : SoldiersContainer(), _name(name), _color(color), _user_controlled(user_controlled)
+    : SoldiersContainer(), _name(name), _color(color), _user_controlled(user_controlled),
+    _quad_tree([](const soldier_ptr& soldier) { return get_pos(soldier); }, engine::math::Rect(-500, -400, 800, 800))
 {}
 
 static uint64_t sid = 0;
@@ -25,6 +35,14 @@ std::shared_ptr<Soldier> Army::create_soldier_cac(engine::math::Point position) 
     register_soldier(soldierCmpt);
 
     return soldierCmpt;
+}
+
+void Army::post_add(soldier_ptr soldier) {
+    _quad_tree.insert(soldier);
+}
+
+void Army::post_rem(soldier_ptr soldier) {
+    _quad_tree.remove(soldier);
 }
 
 void Army::select_soldier(soldier_ptr soldier) {
@@ -57,4 +75,13 @@ std::shared_ptr<Command> Army::create_command_with_selection(engine::math::Point
 
     spdlog::info("New command with {} soldier{}. Target = ({},{}).", command->get_soldiers_size(), command->get_soldiers_size()>1?"s":"", target.x, target.y);
     return command;
+}
+
+void Army::draw_quadtree() const {
+    _quad_tree.debug_draw();
+}
+
+void Army::update_quad_tree() {
+    spdlog::info("updated pos");
+    _quad_tree.update_positions();
 }

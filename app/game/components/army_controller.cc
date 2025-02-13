@@ -77,6 +77,15 @@ void ArmyController::update(float) {
         get_player_army()->create_soldier_cac(pos);
     }
 
+    if(inputs.is_key_pressed(SDL_Scancode::SDL_SCANCODE_O)) {
+        static int rem = 3;
+        if(rem > 0) {
+            rem--;
+            engine::math::Point pos = inputs.get_mouse_in_world();
+            get_player_army()->create_soldier_cac(pos);
+        }
+    }
+
     // create command
     if(inputs.is_clicking(engine::button::right)) {
         engine::math::Point pos = inputs.get_mouse_in_world(engine::button::right);
