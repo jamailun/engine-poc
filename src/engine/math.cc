@@ -17,6 +17,21 @@ float Point::squared_distance(Point other) {
     return Vector::diff(*this, other).squared_length();
 }
 
+bool Rect::intersects(Rect other) const {
+    float x1 = x;
+    float x2 = x + w;
+    float y1 = y;
+    float y2 = y + h;
+    float ox1 = other.x;
+    float ox2 = other.x + other.w;
+    float oy1 = other.y;
+    float oy2 = other.y + other.h;
+
+    bool noOverlap = ox2 < x1 || x2 < ox1
+                  || oy2 < y1 || y2 < oy1;
+    return !noOverlap;
+}
+
 // math / random
 
 #include <random>

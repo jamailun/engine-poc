@@ -90,10 +90,12 @@ struct Rect {
         };
     }
 
-    inline bool contains(Point point) {
+    inline bool contains(Point point) const {
         return (point.x >= x) && (point.x < (x + w))
             && (point.y >= y) && (point.y < (y + h));
     }
+
+    bool intersects(Rect other) const;
 
     inline SDL_FRect to_sdl() const { return SDL_FRect{x, y, w, h}; }
 };

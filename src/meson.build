@@ -17,6 +17,7 @@ engine_sources = [
     'engine/resources/tile_map.cc',
     'engine/resources/tile_set.cc',
 
+    'engine/sdl/colors.cc',
     'engine/sdl/configuration.cc',
     'engine/sdl/drawer.cc',
     'engine/sdl/inputs.cc',

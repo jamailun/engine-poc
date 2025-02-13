@@ -41,6 +41,7 @@ namespace colors {
     const Color yellow      {255, 160, 16, 255};
     const Color brown       {160, 128, 96, 255};
 
+    Color semi_random(int id);
 } // namespace colors
 
 } // namespace engine
