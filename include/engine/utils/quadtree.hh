@@ -49,7 +49,7 @@ private:
 
         // move elements to children
         for(auto iter = _elements.begin(); iter < _elements.end(); ) {
-            insert(std::move(*iter));
+            insert(*iter);
             iter = _elements.erase(iter);
         }
     }
@@ -59,7 +59,7 @@ private:
 
         for(auto& child : _children) {
             for(auto& element : child->_elements) {
-                _elements.push_back(std::move(element));
+                _elements.push_back(element);
             }
             child->_elements.clear();
         }
@@ -81,6 +81,12 @@ private:
         return ss.str();
     }
 
+    void try_merge() {
+        if(size() <= _max_elements) {
+            merge();
+        }
+    }
+
 public:
     quad_tree(PositionSupplier position_supplier, math::Rect bounds, size_t max_elements, size_t max_depth, guaranteed_ptr<quad_tree<T>> parent) :
         _position_supplier(position_supplier), _bounds(bounds), _max_elements(max_elements), _max_depth(max_depth), _depth(0), _parent(parent)
@@ -94,18 +100,18 @@ public:
      */
     void insert(const T& object) {
         math::Point point = _position_supplier(object);
+        std::cout << "INSERT:: element at (" << point.x << "," << point.y << ")." << std::endl;
         if(is_split()) {
             for(auto& child : _children) {
                 if(child->bounds().contains(point)) {
-                    child->insert(std::move(object));
+                    child->insert(object);
                     return;
                 }
             }
-            return;
         }
         // Not split
         if(_bounds.contains(point)) {
-            _elements.push_back(std::move(object));
+            _elements.push_back(object);
             if(_elements.size() > _max_elements) {
                 split();
             }
@@ -113,14 +119,15 @@ public:
         }
         // to parent ?
         if(_parent.is_valid())
-            _parent->insert(std::move(object));
+            _parent->insert(object);
     }
 
     bool remove(const T& object) {
         math::Point point = _position_supplier(object);
         if(is_split()) {
             for(auto& child : _children) {
-                if(child->remove(std::move(object))) {
+                if(child->remove(object)) {
+                    try_merge();
                     return true;
                 }
             }
@@ -193,17 +200,19 @@ public:
                 child->update_positions();
             }
         }
-        for(auto& element : _elements) {
-            math::Point point = _position_supplier(element);
-        std::cout << "will remove element at (" << point.x << ", " << point.y<< ")...  (PV? "<<(_parent.is_valid()?"valid":"nop")<<")" << std::endl;
-            if(!_bounds.contains(point) && remove(element)) {
-                std::cout << "removed ok." << std::endl;
+        for(auto iter = _elements.begin(); iter < _elements.end(); ) {
+            math::Point point = _position_supplier(*iter);
+            if(_bounds.contains(point)) {
+                ++iter;
+            } else {
+                std::cout << "removing element at (" << point.x << "," << point.y << ")." << std::endl;
                 if(_parent.is_valid())
-                    _parent->insert(std::move(element));
-                std::cout << "vraiment ok\n";
+                    _parent->insert(*iter);
+                iter = _elements.erase(iter);
+                std::cout << "rem.done" << std::endl;
             }
         }
-        std::cout << "positions updated.\n";
+        try_merge();
     }
 
     /**
@@ -213,10 +222,8 @@ public:
         std::vector<T> result;
         if(is_split()) {
             for(auto& child : _children) {
-                if(child->bounds().intersects(rect)) {
-                    auto res = child->query(rect);
-                    result.insert(result.end(), res.begin(), res.end());
-                }
+                auto res = child->query(rect);
+                result.insert(result.end(), res.begin(), res.end());
             }
         } else if(_bounds.intersects(rect)) {
             for(auto& element : _elements) {
@@ -226,6 +233,18 @@ public:
             }
         }
         return result;
+    }
+
+    void foreach(std::function<void(const T&)> func) const {
+        if(is_split()) {
+            for(auto& child : _children) {
+                child->foreach(func);
+            }
+        } else {
+            for(const auto& element : _elements) {
+                func(element);
+            }
+        }
     }
 
 };

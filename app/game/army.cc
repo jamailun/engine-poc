@@ -13,7 +13,6 @@
 using namespace game;
 
 static engine::math::Point get_pos(const soldier_ptr soldier) {
-    spdlog::trace("getting pos of soldier in army {}...", soldier->army()->get_name());
     if( ! soldier->get_entity().is_valid()) {
         spdlog::warn("Invalid soldier ??");
         return engine::math::Point(0);
@@ -23,7 +22,7 @@ static engine::math::Point get_pos(const soldier_ptr soldier) {
 
 Army::Army(std::string name, engine::Color color, bool user_controlled)
     : SoldiersContainer(), _name(name), _color(color), _user_controlled(user_controlled),
-    _quad_tree([](const soldier_ptr& soldier) { return get_pos(soldier); }, engine::math::Rect(-500, -400, 800, 800))
+    _quad_tree([](const soldier_ptr& soldier) { return get_pos(soldier); }, engine::math::Rect(-500, -400, 800, 800), 8, 5)
 {}
 
 static uint64_t sid = 0;
@@ -82,6 +81,6 @@ void Army::draw_quadtree() const {
 }
 
 void Army::update_quad_tree() {
-    spdlog::info("updated pos");
     _quad_tree.update_positions();
+    spdlog::info("updated pos. new size={}", _quad_tree.size());
 }

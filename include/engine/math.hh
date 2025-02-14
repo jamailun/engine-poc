@@ -90,6 +90,10 @@ struct Rect {
         };
     }
 
+    static Rect from_center(Point center, float w, float h) {
+        return Rect(center.x - w/2, center.y - h/2, w, h);
+    }
+
     inline bool contains(Point point) const {
         return (point.x >= x) && (point.x < (x + w))
             && (point.y >= y) && (point.y < (y + h));

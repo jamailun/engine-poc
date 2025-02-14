@@ -1,5 +1,6 @@
 #include <engine/entity.hh>
 #include <engine/engine.hh>
+#include <engine/sdl/inputs.hh>
 #include <engine/components/transform.hh>
 #include <engine/sdl/game_window.hh>
 
@@ -67,6 +68,10 @@ void PaintableRegion::update(float delta) {
     if(last > 0.5f) {
         last = 0;
         game::get_state().get_player_army()->update_quad_tree();
+    }
+
+    if(engine::get_inputs().is_key_pressed(SDL_Scancode::SDL_SCANCODE_Z)) {
+        spdlog::info(">> {}", game::get_state().get_player_army()->to_string_tree());
     }
 }
 

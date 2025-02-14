@@ -42,6 +42,7 @@ public:
         _entities.clear();
     }
     
+    // nul
     std::vector<std::shared_ptr<entity>> get_entities_around(math::Point position, float distance);
 
 };

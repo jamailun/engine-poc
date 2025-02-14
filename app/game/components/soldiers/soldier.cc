@@ -36,10 +36,11 @@ void Soldier::update(float elapsed) {
 
     // try to get out of others
     engine::math::Vector delta;
-    auto around = engine::get_engine().get_current_world()->get_entities_around(pos, 10);
+//    auto around = engine::get_engine().get_current_world()->get_entities_around(pos, 10);
+    auto around = _army->query_soldiers(engine::math::Rect::from_center(pos, 20, 20));
     for(auto other_entity : around) {
-        if(other_entity.get() == *get_entity()) continue;
-        engine::math::Vector dir = engine::math::Vector::diff(pos, other_entity->get_world_pos());
+        if(other_entity.get() == this) continue;
+        engine::math::Vector dir = engine::math::Vector::diff(pos, other_entity->get_entity()->get_world_pos());
         delta = delta - dir.normalized_r();
        // spdlog::trace("{} >{}< {}", _owner_entity->get_name(), dir.length(), other->get_name());
     }
