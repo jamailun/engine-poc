@@ -3,6 +3,7 @@
 
 #include <spdlog/spdlog.h>
 #include <iostream>
+#include <SDL2/SDL_ttf.h>
 
 using namespace engine::sdl;
 
@@ -23,6 +24,7 @@ void game_window::sdl_stop_and_destroy() {
         SDL_DestroyRenderer(_renderer_ptr);
         SDL_DestroyWindow(_window_ptr);
         IMG_Quit();
+        TTF_Quit();
         SDL_Quit();
         _initialized = false;
     }
@@ -39,6 +41,13 @@ bool engine::sdl::initialize_window(configuration config) {
     // Global init
     if(SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0) {
         spdlog::critical("SDL could not be initialized.");
+        spdlog::critical("SDL_Error: {}", SDL_GetError());
+        return false;
+    }
+
+    // Init text
+    if(TTF_Init() != 0) {
+        spdlog::critical("SDL-Text could not be initialized.");
         spdlog::critical("SDL_Error: {}", SDL_GetError());
         return false;
     }
@@ -79,8 +88,6 @@ bool engine::sdl::initialize_window(configuration config) {
 
     // register engine
     get_window().sdl_started(config, window, renderer);
-
-    //TODO load ressources ?
 
     return true;
 }

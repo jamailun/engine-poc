@@ -14,6 +14,7 @@ cpp_warning_flags = [
 spdlog_dep = dependency('spdlog', required: true)
 sdl2_dep = dependency('SDL2', required: true)
 sdl2_image_dep = dependency('SDL2_image', required: true)
+sdl2_text_dep = dependency('SDL2_ttf', required: true)
 
 # Engine Build
 subdir('include')

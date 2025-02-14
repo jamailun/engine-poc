@@ -9,6 +9,7 @@ engine_sources = [
     'engine/world.cc',
 
     'engine/components/image_renderer.cc',
+    'engine/components/text_renderer.cc',
     'engine/components/transform.cc',
     'engine/components/tilemap_renderer.cc',
 
@@ -28,7 +29,7 @@ engine_sources = [
 
 engine_lib = static_library(
     'engine_static', engine_sources,
-    dependencies: [spdlog_dep, sdl2_dep, sdl2_image_dep],
+    dependencies: [spdlog_dep, sdl2_dep, sdl2_image_dep, sdl2_text_dep],
     cpp_args: cpp_warning_flags,
     link_args: [],
     include_directories: engine_headers_dir,

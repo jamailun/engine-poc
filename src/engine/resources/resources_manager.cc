@@ -2,17 +2,15 @@
 #include <engine/resources/image.hh>
 #include <engine/resources/tile_set.hh>
 #include <engine/resources/tile_map.hh>
-
 #include <engine/utils/fs_utils.hh>
-#include <nlohmann/json.hpp>
-
 #include <engine/sdl/game_window.hh>
 
 #include <filesystem>
 #include <fstream>
-#include <spdlog/spdlog.h>
-
 #include <iostream>
+
+#include <nlohmann/json.hpp>
+#include <spdlog/spdlog.h>
 
 using namespace engine;
 using namespace resources;
@@ -88,6 +86,11 @@ bool resources_manager::load_path_from_disk(std::string path) {
                     load_resource<TileMap>(_tile_maps, id, [file_path](){ return load_tilemap_from_disk(file_path); });
                     break;
 
+                case resource_type::font:
+                    spdlog::trace("Found font '{}'.", file_path);
+                    _font_files[id] = file_path;
+                    break;
+
                 default:
                     spdlog::warn("Unhandled data-type.");
                     break;
@@ -111,6 +114,23 @@ RM__FIND_DATA(Image, find_image, _images);
 RM__FIND_DATA(TileSet, find_tile_set, _tile_sets);
 RM__FIND_DATA(TileMap, find_tile_map, _tile_maps);
 
+resource_ref<TTF_Font> resources_manager::load_font(std::string font_name, int font_size) const {
+    // Check it exists
+    auto lookup = _font_files.find(font_name);
+    if(lookup == _font_files.end()) {
+        spdlog::warn("Unknown font: '{}'.", font_name);
+        std::stringstream ss;
+        bool f = true;
+        for(const auto& en : _font_files) {
+            if(f) f = false; else ss << ", ";
+            ss << en.first;
+        }
+        spdlog::warn("Existing fonts: [{}].", ss.str());
+        return nullptr;
+    }
+    spdlog::info("Will load font at {}.", lookup->second.c_str());
+    return TTF_OpenFont(lookup->second.c_str(), font_size);
+}
 
 // static instance
 

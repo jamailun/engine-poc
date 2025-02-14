@@ -6,6 +6,7 @@
 #include <engine/sdl/game_window.hh>
 #include <engine/sdl/drawer.hh>
 #include <engine/resources/resources_manager.hh>
+#include <engine/components/text_renderer.hh>
 #include <engine/components/transform.hh>
 #include <engine/components/image_renderer.hh>
 
@@ -100,8 +101,8 @@ int main(int argc, char** argv) {
     }
 
     // Initialize world
-    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
-    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
+    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
+    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
 
     // Start engine
     engine::get_engine().start();
@@ -124,4 +125,7 @@ void setup_test(guaranteed_ptr<engine::world> world) {
     toto->create_component<engine::image_renderer>("sprite1.png");
     toto->create_component<suicide_components>();
     toto->create_component<game::KeyController>(200);
+
+    auto text = world->create_entity("text");
+    text->create_component<engine::text_renderer>("coucou !", 18);
 }

@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+struct SDL_Color;
+
 namespace engine {
 
 /**
@@ -12,6 +14,7 @@ struct Color {
     uint8_t g;
     uint8_t b;
     uint8_t a;
+    SDL_Color to_sdl() const;
 };
 
 /**

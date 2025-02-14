@@ -1,6 +1,13 @@
 #include <engine/sdl/colors.hh>
+#include <SDL2/SDL_ttf.h>
 
 using namespace engine;
+
+SDL_Color Color::to_sdl() const {
+    return SDL_Color {
+        r, g, b, a
+    };
+}
 
 Color colors::semi_random(int id) {
     switch (id) {

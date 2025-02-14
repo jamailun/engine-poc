@@ -3,6 +3,13 @@
 
 ## Build
 
+### Requirements
+
+```bash
+sudo apt-get install libsdl2-ttf-dev
+# install SDL
+```
+
 ### Create the build directories
 
 ```bash
