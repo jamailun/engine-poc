@@ -82,5 +82,5 @@ void Army::draw_quadtree() const {
 
 void Army::update_quad_tree() {
     _quad_tree.update_positions();
-    spdlog::info("updated pos. new size={}", _quad_tree.size());
+    //spdlog::info("updated pos. new size={}", _quad_tree.size());
 }

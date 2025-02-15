@@ -43,10 +43,11 @@ void game_engine::start() {
         
         // Update screen (buffer swapping)
         SDL_RenderPresent(sdl::get_renderer());
+
+        // FPS counter
         frames++;
         if(fps_timer.elapsed_secs() > _fps_frequency) {
             _fps = frames / _fps_frequency;
-            spdlog::trace("FPS = {}", _fps);
             frames = 0;
             fps_timer.lap();
         }

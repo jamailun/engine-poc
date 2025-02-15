@@ -11,9 +11,11 @@
 #include <engine/components/image_renderer.hh>
 
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/fmt.h>
 
 #include "game/game_state.hh"
 #include "game/components/debug_components.hh"
+#include "game/components/clock_component.hh"
 #include "game/components/fps_displayer.hh"
 #include "game/components/key_controller.hh"
 #include "game/components/key_camera_controller.hh"
@@ -111,6 +113,7 @@ int main(int argc, char** argv) {
 
 
 void setup(guaranteed_ptr<engine::world> world) {
+    auto world_dim = engine::get_engine().camera().get_dimensions();
     int width = program_config.config.screen_width;
     int height = program_config.config.screen_height;
 
@@ -122,10 +125,27 @@ void setup(guaranteed_ptr<engine::world> world) {
 
     // FPS
     auto fps_ui = world->create_entity("fps-display");
-    fps_ui->create_component<engine::text_renderer>("coucou", 20);
-    fps_ui->create_component<game::FpsDisplayer>();
-    auto world_dim = engine::get_engine().camera().get_dimensions();
+    auto fps_ui_txt = fps_ui->create_component<engine::text_renderer>("<>", 20);
     fps_ui->get_transform()->set_pos(-world_dim.w/2, -world_dim.h/2);
+    fps_ui->create_component<game::ClockComponent>(
+        [fps_ui_txt](){
+            size_t fps = engine::get_engine().fps();
+            fps_ui_txt->set_text(fmt::format("FPS: {}", fps));
+        },
+        0.5f
+    );
+
+    // Entity displayer
+    auto ec_ui = world->create_entity("entity-count");
+    auto ec_ui_txt = ec_ui->create_component<engine::text_renderer>("<>", 20);
+    ec_ui->get_transform()->set_pos(-world_dim.w/2, -world_dim.h/2 + 32);
+    ec_ui->create_component<game::ClockComponent>(
+        [ec_ui_txt](){
+            size_t size = game::get_state().get_player_army()->get_soldiers_size();
+            ec_ui_txt->set_text(fmt::format("Soldiers: {}", size));
+        },
+        0.5f
+    );
 }
 
 void setup_test(guaranteed_ptr<engine::world> world) {
