@@ -5,6 +5,7 @@ app_sources = [
 
     # Components
     'game/components/army_controller.cc',
+    'game/components/fps_displayer.cc',
     'game/components/key_controller.cc',
     'game/components/key_camera_controller.cc',
     'game/components/army_controller.cc',

@@ -37,6 +37,7 @@ public:
 
     int z_index() const { return _z_index; }
     void z_index(int z_index) { _z_index = z_index; }
+    void set_text(const std::string& text);
 
     bool is_valid() const { return _valid; }
 };

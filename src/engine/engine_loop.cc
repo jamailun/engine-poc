@@ -21,8 +21,11 @@ void game_engine::start() {
 
     SDL_Event event;
     spdlog::info("GameEngine started.");
-    system_timer timer;
-    timer.start();
+    system_timer update_timer;
+    system_timer fps_timer;
+    update_timer.start();
+    fps_timer.start();
+    size_t frames = 0;
     while(_running) {
         // Poll events from window
         while (SDL_PollEvent(&event))
@@ -31,15 +34,22 @@ void game_engine::start() {
         // render + update
         // done by thread on_loop_update();
         on_loop_render();
-        float elapsed = timer.elapsed_secs();
+        float elapsed = update_timer.elapsed_secs();
         if(elapsed >= 0.016f) {
             // spdlog::trace("elapsed = {:4}s", elapsed);
             on_loop_update(elapsed);
-            timer.lap();
+            update_timer.lap();
         }
         
         // Update screen (buffer swapping)
         SDL_RenderPresent(sdl::get_renderer());
+        frames++;
+        if(fps_timer.elapsed_secs() > _fps_frequency) {
+            _fps = frames / _fps_frequency;
+            spdlog::trace("FPS = {}", _fps);
+            frames = 0;
+            fps_timer.lap();
+        }
 
         // Chores
         handle_queue__entity_delete();

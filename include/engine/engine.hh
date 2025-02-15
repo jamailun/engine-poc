@@ -35,6 +35,8 @@ private:
     std::shared_ptr<world> _current_world;
     game_camera _camera;
     Inputs _inputs;
+    size_t _fps;
+    float _fps_frequency = 1.0f;
 
     // user-setup
     std::vector<setup_operation> _setup_operations;
@@ -99,7 +101,8 @@ public:
     math::Point camera_to_world(float x, float y) const { return camera_to_world(math::Point(x, y)); }
     math::Point camera_to_world(math::Point camera_pos) const;
     bool running() const { return _running; }
-    
+    size_t fps() const { return _fps; }
+
     // ---- queues
 
     void request_entity_deletion(entity* entity_ptr) {

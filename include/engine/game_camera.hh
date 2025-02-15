@@ -13,6 +13,7 @@ public:
         set_position(-_rect.w * 0.5, -_rect.h * 0.5);
     }
     void set_position(float x, float y);
+    math::Rect get_dimensions() const { return _rect; }
 
     void move(float dx, float dy);
 

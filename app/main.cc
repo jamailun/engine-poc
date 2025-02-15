@@ -14,6 +14,7 @@
 
 #include "game/game_state.hh"
 #include "game/components/debug_components.hh"
+#include "game/components/fps_displayer.hh"
 #include "game/components/key_controller.hh"
 #include "game/components/key_camera_controller.hh"
 #include "game/components/army_controller.hh"
@@ -101,8 +102,8 @@ int main(int argc, char** argv) {
     }
 
     // Initialize world
-    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
-    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
+    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
+    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
 
     // Start engine
     engine::get_engine().start();
@@ -118,6 +119,13 @@ void setup(guaranteed_ptr<engine::world> world) {
     terrain->create_component<game::ArmyController>(game::get_state().get_player_army());
     terrain->create_component<game::KeyCameraController>();
     terrain->get_transform()->set_pos(-width/2, -height/2);
+
+    // FPS
+    auto fps_ui = world->create_entity("fps-display");
+    fps_ui->create_component<engine::text_renderer>("coucou", 20);
+    fps_ui->create_component<game::FpsDisplayer>();
+    auto world_dim = engine::get_engine().camera().get_dimensions();
+    fps_ui->get_transform()->set_pos(-world_dim.w/2, -world_dim.h/2);
 }
 
 void setup_test(guaranteed_ptr<engine::world> world) {

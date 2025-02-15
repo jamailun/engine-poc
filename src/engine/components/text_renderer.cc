@@ -55,6 +55,12 @@ void text_renderer::render() {
     SDL_RenderCopy(sdl::get_renderer(), _text_texture, nullptr, &_display_rect);
 }
 
+void text_renderer::set_text(const std::string& text) {
+    _display_string = text;
+    render_font();
+}
+
+
 //
 template<>
 int engine::detail::z_index_of_component<text_renderer>() {
