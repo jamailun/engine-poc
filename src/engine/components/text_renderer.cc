@@ -14,35 +14,45 @@
 
 using namespace engine;
 
-text_renderer::text_renderer(entity_ptr entity, std::string display_string, int font_size)
-    : base_component(entity), _display_string(display_string), _font_size(font_size)
+void text_renderer::render_font() {
+    guaranteed_ptr<TTF_Font> font = resources::get_manager().load_font("fonts/arial.ttf", _font_size);
+    _valid = font.is_valid();
+    if(!font.is_valid()) {
+        spdlog::error("Could not render text: font is invalid.");
+        return;
+    }
+
+    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(*font, _display_string.c_str(), _font_color.to_sdl());
+    _text_texture = SDL_CreateTextureFromSurface(sdl::get_renderer(), textSurface);
+    _display_rect.w = textSurface->w;
+    _display_rect.h = textSurface->h;
+    SDL_FreeSurface(textSurface);
+
+    TTF_CloseFont(*font);
+}
+
+text_renderer::text_renderer(entity_ptr entity, std::string display_string, int font_size, Color color)
+    : base_component(entity), _display_string(display_string), _font_size(font_size), _font_color(color)
 {
-    _font = resources::get_manager().load_font("fonts/arial.ttf", font_size);
-    if(_font.is_valid()) {
-        _text_surface = TTF_RenderText_Shaded(*_font, _display_string.c_str(), colors::red.to_sdl(), colors::blue.to_sdl());
-    } else spdlog::error("Could NOT load font {}.", "fonts/arial.ttf");
+    render_font();
 }
 
 text_renderer::~text_renderer() {
-    if(is_valid()) {
-        std::cout << "DELETE surface..." << std::endl;
-        SDL_FreeSurface(_text_surface);
-        std::cout << "CLOSE font..." << std::endl;
-        TTF_CloseFont(*_font);
-        _font = nullptr;
-        std::cout << "deleter done." << std::endl;
+    if(_text_texture != nullptr) {
+        std::cout << "Delete texture " << _text_texture << "." << std::endl;
+        SDL_DestroyTexture(_text_texture);
     }
+    std::cout << "text_renderer::deleter done." << std::endl;
 }
 
 void text_renderer::render() {
     if(!is_valid()) return;
 
     math::Point pos = engine::get_engine().world_to_camera(get_entity()->get_world_pos());
-    SDL_Rect pos_rect {(int)pos.x, (int)pos.y, 200, 200};
-    spdlog::trace("draw at ({},{})", pos_rect.x, pos_rect.y);
-    spdlog::trace("> {:p}", (void*)SDL_GetWindowSurface(sdl::get_window().sdl_window()));
+    _display_rect.x = (int) pos.x;
+    _display_rect.y = (int) pos.y;
 
-    SDL_UpperBlit(_text_surface, nullptr, SDL_GetWindowSurface(sdl::get_window().sdl_window()), &pos_rect);
+    SDL_RenderCopy(sdl::get_renderer(), _text_texture, nullptr, &_display_rect);
 }
 
 //

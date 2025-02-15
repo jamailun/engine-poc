@@ -128,8 +128,9 @@ resource_ref<TTF_Font> resources_manager::load_font(std::string font_name, int f
         spdlog::warn("Existing fonts: [{}].", ss.str());
         return nullptr;
     }
-    spdlog::info("Will load font at {}.", lookup->second.c_str());
-    return TTF_OpenFont(lookup->second.c_str(), font_size);
+    TTF_Font* font = TTF_OpenFont(lookup->second.c_str(), font_size);
+    spdlog::trace("Font ptr = {:p}.", (void*)font);
+    return font;
 }
 
 // static instance
