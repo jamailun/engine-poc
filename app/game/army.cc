@@ -12,18 +12,30 @@
 
 using namespace game;
 
-static engine::math::Point get_pos(const soldier_ptr soldier) {
-    if( ! soldier->get_entity().is_valid()) {
-        spdlog::warn("Invalid soldier ??");
-        return engine::math::Point(0);
-    }
-    return soldier->get_entity()->get_world_pos();
+// static engine::math::Point get_pos(const soldier_ptr soldier) {
+//     if( ! soldier->get_entity().is_valid()) {
+//         spdlog::warn("Invalid soldier ??");
+//         return engine::math::Point(0);
+//     }
+//     return soldier->get_entity()->get_world_pos();
+// }
+
+quadtree::Box<float> game::get_box(const soldier_ptr& soldier) {
+    auto pos = soldier->get_entity()->get_world_pos();
+    return quadtree::Box<float>(pos.x, pos.y, soldier->get_radius(), soldier->get_radius());
+}
+
+bool game::soldierEquals(const soldier_ptr& a, const soldier_ptr& b) {
+    return a == b;
 }
 
 Army::Army(std::string name, engine::Color color, bool user_controlled)
-    : SoldiersContainer(), _name(name), _color(color), _user_controlled(user_controlled),
-    _quad_tree([](const soldier_ptr& soldier) { return get_pos(soldier); }, engine::math::Rect(-500, -400, 800, 800), 8, 5)
-{}
+    : SoldiersContainer(), _name(name), _color(color), _user_controlled(user_controlled)//,
+//    _quad_tree([](const soldier_ptr& soldier) { return get_pos(soldier); }, engine::math::Rect(-500, -400, 800, 800), 8, 5)
+{
+    quadtree::Box<float> box(-500, -400, 800, 800);
+    _quad_tree = std::make_unique<QuadTree>(box, get_box, soldierEquals);
+}
 
 static uint64_t sid = 0;
 std::shared_ptr<Soldier> Army::create_soldier_cac(engine::math::Point position) {
@@ -37,11 +49,11 @@ std::shared_ptr<Soldier> Army::create_soldier_cac(engine::math::Point position) 
 }
 
 void Army::post_add(soldier_ptr soldier) {
-    _quad_tree.insert(soldier);
+    _quad_tree->add(soldier);
 }
 
 void Army::post_rem(soldier_ptr soldier) {
-    _quad_tree.remove(soldier);
+    _quad_tree->remove(soldier);
 }
 
 void Army::select_soldier(soldier_ptr soldier) {
@@ -77,10 +89,11 @@ std::shared_ptr<Command> Army::create_command_with_selection(engine::math::Point
 }
 
 void Army::draw_quadtree() const {
-    _quad_tree.debug_draw();
+   _quad_tree->debug_draw();
 }
 
 void Army::update_quad_tree() {
-    _quad_tree.update_positions();
+    _quad_tree->findAllIntersections();
+    //_quad_tree.update_positions();
     //spdlog::info("updated pos. new size={}", _quad_tree.size());
 }

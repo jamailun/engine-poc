@@ -5,13 +5,20 @@
 #include "./soldiers_container.hh"
 #include "./components/soldiers/soldier.hh"
 
+#include <quadtree/QuadTree.h>
+
 #include <vector>
 #include <string>
 #include <SDL2/SDL_rect.h>
 
 namespace game {
 
-using QuadTree = engine::quad_tree<soldier_ptr>;
+//using QuadTree = engine::quad_tree<soldier_ptr>;
+
+quadtree::Box<float> get_box(const soldier_ptr& soldier);
+bool soldierEquals(const soldier_ptr&, const soldier_ptr&);
+
+using QuadTree = quadtree::Quadtree<soldier_ptr>;
 
 class Army : public SoldiersContainer {
     std::string _name;
@@ -19,7 +26,8 @@ class Army : public SoldiersContainer {
     bool _user_controlled = false;
 
     SoldiersContainer _selection;
-    QuadTree _quad_tree;
+    // QuadTree _quad_tree; // quadtree::Box<float> (const game::soldier_ptr &soldier)
+    std::unique_ptr<QuadTree> _quad_tree;
 
 protected:
     void post_add(soldier_ptr soldier);
@@ -50,10 +58,11 @@ public:
     void draw_quadtree() const;
     void update_quad_tree();
     std::string to_string_tree() const {
-        return _quad_tree.to_string();
+        return "todo";
     }
     std::vector<soldier_ptr> query_soldiers(engine::math::Rect rect) const {
-        return _quad_tree.query(rect);
+        quadtree::Box<float> box(rect.x, rect.y, rect.w, rect.h);
+        return _quad_tree->query(box);
     }
 
 };
