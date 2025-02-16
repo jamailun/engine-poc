@@ -40,7 +40,7 @@ Army::Army(std::string name, engine::Color color, bool user_controlled)
         engine::math::Rect(-500, -400, 800, 800),
         [](const soldier_ptr& soldier){return soldier->id();},
         [](const soldier_ptr& soldier){auto pos=soldier->get_entity()->get_world_pos(); return engine::math::Rect(pos.x, pos.y, 10, 10);},
-        8, 8
+        16, 16
     );
 }
 
@@ -96,7 +96,7 @@ std::shared_ptr<Command> Army::create_command_with_selection(engine::math::Point
 }
 
 void Army::draw_quadtree() const {
-   _spatial_grid->debug_draw();
+//   _spatial_grid->debug_draw();
 }
 
 void Army::update_quad_tree() {
