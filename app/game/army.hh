@@ -4,6 +4,7 @@
 #include <engine/utils/quadtree.hh>
 #include "./soldiers_container.hh"
 #include "./components/soldiers/soldier.hh"
+#include <engine/utils/spatial_grid.hh>
 
 #include <quadtree/QuadTree.h>
 
@@ -18,7 +19,8 @@ namespace game {
 quadtree::Box<float> get_box(const soldier_ptr& soldier);
 bool soldierEquals(const soldier_ptr&, const soldier_ptr&);
 
-using QuadTree = quadtree::Quadtree<soldier_ptr>;
+//using QuadTree = quadtree::Quadtree<soldier_ptr>;
+using SpatialGrid = engine::spatial_grid<size_t, soldier_ptr>;
 
 class Army : public SoldiersContainer {
     std::string _name;
@@ -27,7 +29,8 @@ class Army : public SoldiersContainer {
 
     SoldiersContainer _selection;
     // QuadTree _quad_tree; // quadtree::Box<float> (const game::soldier_ptr &soldier)
-    std::unique_ptr<QuadTree> _quad_tree;
+    // std::unique_ptr<QuadTree> _quad_tree;
+    std::unique_ptr<SpatialGrid> _spatial_grid;
 
 protected:
     void post_add(soldier_ptr soldier);
@@ -61,8 +64,7 @@ public:
         return "todo";
     }
     std::vector<soldier_ptr> query_soldiers(engine::math::Rect rect) const {
-        quadtree::Box<float> box(rect.x, rect.y, rect.w, rect.h);
-        return _quad_tree->query(box);
+        return _spatial_grid->query(rect);
     }
 
 };

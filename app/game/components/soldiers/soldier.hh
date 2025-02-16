@@ -19,6 +19,7 @@ class Command; // fwd
 class Soldier : public engine::base_component, public Livable {
     friend class Command;
 private:
+    size_t _id;
     guaranteed_ptr<Army> _army;
     float _radius;
     bool _selected = false;
@@ -39,6 +40,7 @@ public:
     inline void clear_command() { if(_command) _command = nullptr; }
     void set_command(std::shared_ptr<Command> command);
     inline bool has_command() const;
+    inline size_t id() const { return _id; }
 
     guaranteed_ptr<Army> army() { return _army; }
 

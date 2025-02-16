@@ -13,3 +13,6 @@ using supplier = std::function<T(void)>;
 
 template<typename T>
 using consumer = std::function<void(T)>;
+
+template<typename T, typename U>
+using mapper = std::function<U(T)>;

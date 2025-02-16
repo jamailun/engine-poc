@@ -14,8 +14,11 @@
 
 using namespace game;
 
+static size_t ID_PROVIDER = 0;
+
 Soldier::Soldier(entity_ptr entity, guaranteed_ptr<Army> army, float speed, float radius)
-    : base_component(entity), Livable(100), _army(army), _radius(radius), _speed(speed)
+    :  base_component(entity), Livable(100), 
+       _id(ID_PROVIDER++),  _army(army), _radius(radius), _speed(speed)
 {}
 
 void Soldier::update(float elapsed) {
