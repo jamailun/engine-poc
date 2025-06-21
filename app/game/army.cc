@@ -12,40 +12,13 @@
 
 using namespace game;
 
-// static engine::math::Point get_pos(const soldier_ptr soldier) {
-//     if( ! soldier->get_entity().is_valid()) {
-//         spdlog::warn("Invalid soldier ??");
-//         return engine::math::Point(0);
-//     }
-//     return soldier->get_entity()->get_world_pos();
-// }
-
-quadtree::Box<float> game::get_box(const soldier_ptr& soldier) {
-    auto pos = soldier->get_entity()->get_world_pos();
-    return quadtree::Box<float>(pos.x, pos.y, soldier->get_radius(), soldier->get_radius());
-}
-
-bool game::soldierEquals(const soldier_ptr& a, const soldier_ptr& b) {
-    return a == b;
-}
-
 Army::Army(std::string name, engine::Color color, bool user_controlled)
-    : SoldiersContainer(), _name(name), _color(color), _user_controlled(user_controlled)//,
-//    _quad_tree([](const soldier_ptr& soldier) { return get_pos(soldier); }, engine::math::Rect(-500, -400, 800, 800), 8, 5)
+    : SoldiersContainer(), _name(name), _color(color), _user_controlled(user_controlled)
 {
-    // quadtree::Box<float> box(-500, -400, 800, 800);
-    // _quad_tree = std::make_unique<QuadTree>(box, get_box, soldierEquals);
-
-    // _spatial_grid = std::make_unique<SpatialGrid>(
-    //     engine::math::Rect(-500, -400, 800, 800),
-    //     [](const soldier_ptr& soldier){return soldier->id();},
-    //     [](const soldier_ptr& soldier){auto pos=soldier->get_entity()->get_world_pos(); return engine::math::Rect(pos.x, pos.y, 10, 10);},
-    //     16, 16
-    // );
     _spatial_grid = std::make_unique<SpatialGrid>(
         [](const soldier_ptr& soldier){return soldier->id();},
         [](const soldier_ptr& soldier){return soldier->get_entity()->get_world_pos();},
-        64
+        32
     );
 }
 
@@ -106,7 +79,4 @@ void Army::draw_quadtree() const {
 
 void Army::update_quad_tree() {
     _spatial_grid->update_positions();
-//    _quad_tree->findAllIntersections();
-    //_quad_tree.update_positions();
-    //spdlog::info("updated pos. new size={}", _quad_tree.size());
 }

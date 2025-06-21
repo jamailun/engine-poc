@@ -15,23 +15,18 @@
 
 namespace game {
 
-//using QuadTree = engine::quad_tree<soldier_ptr>;
-
-quadtree::Box<float> get_box(const soldier_ptr& soldier);
-bool soldierEquals(const soldier_ptr&, const soldier_ptr&);
-
-//using QuadTree = quadtree::Quadtree<soldier_ptr>;
-// using SpatialGrid = engine::spatial_grid<size_t, soldier_ptr>;
+// Spacial grid type, for soldiers.
 using SpatialGrid = engine::dynamic_spatial_grid<size_t, soldier_ptr>;
 
+/*
+* An army of soldiers.
+*/
 class Army : public SoldiersContainer {
     std::string _name;
     engine::Color _color;
     bool _user_controlled = false;
 
     SoldiersContainer _selection;
-    // QuadTree _quad_tree; // quadtree::Box<float> (const game::soldier_ptr &soldier)
-    // std::unique_ptr<QuadTree> _quad_tree;
     std::unique_ptr<SpatialGrid> _spatial_grid;
 
 protected:

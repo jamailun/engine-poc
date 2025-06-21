@@ -67,12 +67,10 @@ private:
                 continue;
             }
             // move to another location
-            std::cout << "! solder will change pos from "<<node<<". Indeed, rec (" << node->bounds.x << ", " << node->bounds.y << ", " << node->bounds.w << ", " << node->bounds.h << ") does NOT contains (" << pos.x << ", " << pos.y << ").\n";
             Node* new_node = try_locate(pos);
             if(new_node == nullptr) {
                 new_node = create_new_node(pos);
             }
-            std::cout << "! new node = "<<new_node<<"\n";
             new_node->elements[iter->first] = iter->second;
             _reversed_nodes[iter->first] = new_node;
             iter = node->elements.erase(iter);
@@ -113,7 +111,7 @@ private:
     Node* create_new_node(const math::Point position) {
         int64_t x = world_dim_to_index(position.x);
         int64_t y = world_dim_to_index(position.y);
-        spdlog::info("Creating node at {}/{}...", x, y);
+        spdlog::debug("Creating node at {}/{}...", x, y);
         if(has_node(x, y)) {
             spdlog::error("Call to #create_new_node, but node already exists! ({}, {})", x, y);
             return at(x, y);
@@ -124,7 +122,7 @@ private:
         node->bounds = math::Rect(x * _node_size, y * _node_size, _node_size, _node_size);
         _nodes[x][y] = node;
         _all_nodes.push_back(node);
-        spdlog::warn("Ok, created node.");
+        spdlog::debug("Ok, created node.");
         _nodes_may_have_changed = true;
         return node;
     }
@@ -199,6 +197,7 @@ public:
         }
         return output;
     }
+
 
 #ifdef _SPATIAL_GRID_DEBUG
     void debug_draw() const {

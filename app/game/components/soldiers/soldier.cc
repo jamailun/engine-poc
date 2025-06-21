@@ -58,7 +58,7 @@ void Soldier::render() {
     }
 
     // Color
-    engine::drawer::fill_rect_center(get_entity()->get_transform()->get_pos(), _radius, _radius, _army->get_color());
+    engine::drawer::fill_rect_center(get_entity()->get_transform()->get_pos(), _radius, _radius, id() == 0 ? engine::colors::pink : _army->get_color());
     
     // arrow
     if(has_command() && _command->distance(this) >= 5) {
