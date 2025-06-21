@@ -5,6 +5,7 @@
 #include "./soldiers_container.hh"
 #include "./components/soldiers/soldier.hh"
 #include <engine/utils/spatial_grid.hh>
+#include <engine/utils/dynamic_spatial_grid.hh>
 
 #include <quadtree/QuadTree.h>
 
@@ -20,7 +21,8 @@ quadtree::Box<float> get_box(const soldier_ptr& soldier);
 bool soldierEquals(const soldier_ptr&, const soldier_ptr&);
 
 //using QuadTree = quadtree::Quadtree<soldier_ptr>;
-using SpatialGrid = engine::spatial_grid<size_t, soldier_ptr>;
+// using SpatialGrid = engine::spatial_grid<size_t, soldier_ptr>;
+using SpatialGrid = engine::dynamic_spatial_grid<size_t, soldier_ptr>;
 
 class Army : public SoldiersContainer {
     std::string _name;

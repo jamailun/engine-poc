@@ -59,6 +59,7 @@ void PaintableRegion::render() {
     );
 
     // render quadtree
+    engine::drawer::draw_rect(engine::math::Rect(0, 0, 32, 32), engine::colors::blue);
     game::get_state().get_player_army()->draw_quadtree();
 }
 
