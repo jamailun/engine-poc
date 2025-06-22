@@ -32,6 +32,10 @@ bool Rect::intersects(Rect other) const {
     return !noOverlap;
 }
 
+Rect Point::to_rect(float w, float h) const {
+    return Rect(x, y, w, h);
+}
+
 // math / random
 
 #include <random>

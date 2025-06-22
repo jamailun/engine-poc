@@ -30,6 +30,7 @@ namespace colors {
     const Color gray        {127, 127, 127, 255};
     const Color light_gray  {192, 192, 192, 255};
     const Color dark_gray   {63, 63, 63, 255};
+    const Color alpha_gray  {192, 192, 192, 100};
 
     const Color red         {255, 0, 0, 255};
     const Color green       {0, 255, 0, 255};

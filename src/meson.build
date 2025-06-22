@@ -12,6 +12,7 @@ engine_sources = [
     'engine/components/text_renderer.cc',
     'engine/components/transform.cc',
     'engine/components/tilemap_renderer.cc',
+    'engine/components/ui/ui_button.cc',
     'engine/components/ui/ui_text.cc',
 
     'engine/resources/resources_manager.cc',

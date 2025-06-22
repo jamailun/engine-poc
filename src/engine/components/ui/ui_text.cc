@@ -28,6 +28,10 @@ void ui_text::render_font() {
     SDL_FreeSurface(textSurface);
 
     TTF_CloseFont(*font);
+
+    // Update stored bounds
+    _screen_bounds.w = _display_rect.w;
+    _screen_bounds.h = _display_rect.h;
 }
 
 ui_text::ui_text(entity_ptr entity, std::string display_string, int font_size, Color color)

@@ -59,6 +59,7 @@ public:
     // Button down only since a few instants
     bool is_clicking(uint8_t button) const;
 
+    math::Point get_mouse(uint8_t button) const;
     int get_mouse_x(uint8_t button) const;
     int get_mouse_y(uint8_t button) const;
     math::Point get_mouse_in_world(uint8_t button) const;

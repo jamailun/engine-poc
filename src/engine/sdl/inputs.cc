@@ -63,9 +63,12 @@ bool Inputs::is_mouse_button_up(uint8_t button) const {
 
 bool Inputs::is_clicking(uint8_t button) const {
 //    spdlog::trace("click ? diff={}, success={}", SDL_GetTicks() - _button_pressed[button].timestamp, SDL_GetTicks() - _button_pressed[button].timestamp < 5 ? "true" : "false");
-    return is_mouse_button_down(button) && SDL_GetTicks() - _button_pressed[button].timestamp < 100;
+    return is_mouse_button_down(button) && SDL_GetTicks() - _button_pressed[button].timestamp < 20;
 }
 
+math::Point Inputs::get_mouse(uint8_t button) const {
+    return math::Point(_button_pressed[button].x, _button_pressed[button].y);
+}
 
 int Inputs::get_mouse_x(uint8_t button) const {
     return _button_pressed[button].x;

@@ -31,7 +31,7 @@ public:
     ~ui_text();
     
     // render call
-    void render();
+    void render() override;
     void set_text(const std::string& text);
 
     bool is_valid() const { return _valid; }

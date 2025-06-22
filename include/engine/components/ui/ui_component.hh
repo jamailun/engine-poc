@@ -12,12 +12,12 @@ namespace engine {
 class ui_component : public base_component {
 private:
     int _z_index = 1000;
-    math::Point _screen_position;
 protected:
+    math::Rect _screen_bounds;
     virtual void position_changed() {/* Can be overwritten */}
 public:
     ui_component(entity_ptr entity) : base_component(entity) {}
-    ui_component(entity_ptr entity, math::Point screen_position) : base_component(entity), _screen_position(screen_position) {}
+    ui_component(entity_ptr entity, math::Point screen_position) : base_component(entity), _screen_bounds(screen_position.to_rect(0,0)) {}
     virtual ~ui_component() = default;
     
     // render call
@@ -25,9 +25,15 @@ public:
 
     int z_index() const { return _z_index; }
     void z_index(int z_index) { _z_index = z_index; }
-    math::Point screen_position() const { return _screen_position; }
+    math::Rect screen_bounds() const { return _screen_bounds; }
+    math::Point screen_position() const { return _screen_bounds.top_left(); }
     void screen_position(math::Point position) {
-        _screen_position = position;
+        _screen_bounds.x = position.x;
+        _screen_bounds.y = position.y;
+        position_changed();
+    }
+    void screen_bounds(math::Rect bounds) {
+        _screen_bounds = bounds;
         position_changed();
     }
 };

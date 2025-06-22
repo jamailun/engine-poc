@@ -11,6 +11,7 @@ namespace math {
 const float PI = 3.14159;
 
 struct Vector;
+struct Rect;
 
 struct Point {
     float x, y;
@@ -22,6 +23,7 @@ struct Point {
     float distance(Point other);
     float squared_distance(Point other);
     Point operator+(Vector vec) const;
+    Rect to_rect(float w, float h) const;
 };
 
 struct Vector {
@@ -97,6 +99,14 @@ struct Rect {
     inline bool contains(Point point) const {
         return (point.x >= x) && (point.x < (x + w))
             && (point.y >= y) && (point.y < (y + h));
+    }
+
+    inline Point center() const {
+        return Point(x + w / 2, y + h / 2);
+    }
+
+    inline Point top_left() const {
+        return Point(x, y);
     }
 
     bool intersects(Rect other) const;

@@ -10,6 +10,7 @@
 #include <engine/components/transform.hh>
 #include <engine/components/image_renderer.hh>
 #include <engine/components/ui/ui_text.hh>
+#include <engine/components/ui/ui_button.hh>
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
@@ -31,9 +32,6 @@ void setup_test(guaranteed_ptr<engine::world> world);
 game::argument_read_output program_config;
 
 int main(int argc, char** argv) {
-    // quad();
-    // if(1 < 4) return 0;
-
     program_config = game::read_arguments(argc, argv);
     spdlog::info("POC Started.");
 
@@ -103,8 +101,11 @@ void setup_test(guaranteed_ptr<engine::world> world) {
     text->get_transform()->set_pos(-50, -300);
     text->create_component<engine::text_renderer>("coucou !", 18);
     auto st = text->create_component<engine::ui_text>("Text on screen.", 18);
-    st->screen_position(engine::math::Point(100, 300));
+    st->screen_position(engine::math::Point(20, 20));
 
     auto cam_ctrl = world->create_entity("cam_controller");
     cam_ctrl->create_component<game::KeyCameraController>(100);
+
+    auto btn = world->create_entity("btn");
+    btn->create_component<engine::ui_button>(engine::math::Rect(20, 100, 100, 50));
 }
