@@ -34,7 +34,7 @@ void ui_button::render() {
 }
 
 void ui_button::update(float) {
-    // Only care aboutn left click.
+    // Only care about left click.
     if( ! engine::get_inputs().is_clicking(engine::button::left)) return;
     math::Point mouse_pos = engine::get_inputs().get_mouse(engine::button::left);
     if(!_screen_bounds.contains(mouse_pos)) return;

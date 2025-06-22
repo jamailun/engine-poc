@@ -16,7 +16,7 @@
 using namespace game;
 
 ArmyController::ArmyController(entity_ptr entity, guaranteed_ptr<Army> army)
-    : engine::base_component(entity), _army(army)
+    : engine::base_component(entity), _br_select_changed(100), _army(army)
 {}
 
 static guaranteed_ptr<Army> get_player_army() {
@@ -62,34 +62,47 @@ void ArmyController::render() {
 }
 
 void ArmyController::update(float) {
-    // selection
-    update_selection_rect();
-    
-    // other
     const engine::Inputs& inputs = engine::get_inputs();
-    
-    // create a soldier
-    if(inputs.is_clicking(engine::button::alt_1)) {
-        engine::math::Point pos = inputs.get_mouse_in_world(engine::button::alt_1);
-        get_player_army()->create_soldier_cac(pos);
-    } else if(inputs.is_key_pressed(SDL_Scancode::SDL_SCANCODE_P)) {
-        engine::math::Point pos = inputs.get_mouse_in_world();
-        get_player_army()->create_soldier_cac(pos);
-    }
 
-    if(inputs.is_key_pressed(SDL_Scancode::SDL_SCANCODE_O)) {
-        static int rem = 3;
-        if(rem > 0) {
-            rem--;
-            engine::math::Point pos = inputs.get_mouse_in_world();
-            get_player_army()->create_soldier_cac(pos);
+    // Switch mode
+    if(inputs.is_key_pressed(SDL_Scancode::SDL_SCANCODE_Q) && _br_select_changed.test()) {
+        switch(_mode) {
+            case SELECT_AND_COMMAND:
+                _mode = PAINT;
+                spdlog::info("Switched to PAINT mode");
+                break;
+            case PAINT:
+                _mode = SELECT_AND_COMMAND;
+                spdlog::info("Switched to SELECT_AND_COMMAND mode");
+                break;
         }
     }
 
-    // create command
-    if(inputs.is_clicking(engine::button::right)) {
-        engine::math::Point pos = inputs.get_mouse_in_world(engine::button::right);
-        get_player_army()->create_command_with_selection(pos);
+    // Select mode
+    if(_mode == SELECT_AND_COMMAND) {
+        // selection
+        update_selection_rect();
+        
+        // create a soldier
+        if(inputs.is_clicking(engine::button::alt_1)) {
+            engine::math::Point pos = inputs.get_mouse_in_world(engine::button::alt_1);
+            get_player_army()->create_soldier_cac(pos);
+        } else if(inputs.is_key_pressed(SDL_Scancode::SDL_SCANCODE_P)) {
+            engine::math::Point pos = inputs.get_mouse_in_world();
+            get_player_army()->create_soldier_cac(pos);
+        }
+
+        // create command
+        if(inputs.is_clicking(engine::button::right)) {
+            engine::math::Point pos = inputs.get_mouse_in_world(engine::button::right);
+            get_player_army()->create_command_with_selection(pos);
+        }
+        return;
+    }
+
+    if(_mode == PAINT) {
+        // ...
+        return;
     }
 }
 

@@ -57,9 +57,6 @@ public:
 
     void draw_quadtree() const;
     void update_quad_tree();
-    std::string to_string_tree() const {
-        return "todo";
-    }
     std::vector<soldier_ptr> query_soldiers(engine::math::Rect rect) const {
         return _spatial_grid->query(rect);
     }

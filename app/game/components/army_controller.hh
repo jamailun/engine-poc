@@ -4,6 +4,7 @@
 #include <engine/entity.hh>
 #include <engine/guaranteed_ptr.hh>
 #include <engine/math.hh>
+#include <engine/utils/time_barrier.hh>
 
 namespace game {
 
@@ -15,6 +16,12 @@ class Army;
  */
 class ArmyController : public engine::base_component {
 private:
+    enum SelectMode {
+        SELECT_AND_COMMAND,
+        PAINT
+    } _mode = SELECT_AND_COMMAND;
+    engine::time_barrier _br_select_changed;
+
     guaranteed_ptr<Army> _army;
 
     // Selection management
@@ -29,6 +36,13 @@ public:
 
     virtual void update(float);
     virtual void render();
+
+    bool is_mode_paint() const {
+        return _mode == PAINT;
+    }
+    bool is_mode_select_and_command() const {
+        return _mode == SELECT_AND_COMMAND;
+    }
 };
 
 } // namespace game

@@ -47,8 +47,8 @@ int main(int argc, char** argv) {
     }
 
     // Initialize world
-    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
-    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
+    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
+    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
 
     // Start engine
     engine::get_engine().start();
@@ -62,8 +62,8 @@ void setup(guaranteed_ptr<engine::world> world) {
 
     auto terrain = world->create_entity("terrain");
     terrain->create_component<game::PaintableRegion>(width, height);
-    terrain->create_component<game::ArmyController>(game::get_state().get_player_army());
-    terrain->create_component<game::KeyCameraController>();
+    auto armyCtrl = terrain->create_component<game::ArmyController>(game::get_state().get_player_army());
+    terrain->create_component<game::KeyCameraController>(100);
     terrain->get_transform()->set_pos(-width/2, -height/2);
 
     // FPS
@@ -79,13 +79,30 @@ void setup(guaranteed_ptr<engine::world> world) {
     );
 
     // Entity displayer
-    auto ec_ui = world->create_entity("entity-count");
-    auto ec_ui_txt = ec_ui->create_component<engine::text_renderer>("<>", 20);
-    ec_ui->get_transform()->set_pos(-world_dim.w/2, -world_dim.h/2 + 32);
-    ec_ui->create_component<game::ClockComponent>(
-        [ec_ui_txt](){
-            size_t size = game::get_state().get_player_army()->get_soldiers_size();
-            ec_ui_txt->set_text(fmt::format("Soldiers: {}", size));
+    // auto ec_ui = world->create_entity("entity-count");
+    // auto ec_ui_txt = ec_ui->create_component<engine::text_renderer>("<>", 20);
+    // ec_ui->get_transform()->set_pos(-world_dim.w/2, -world_dim.h/2 + 32);
+    // ec_ui->create_component<game::ClockComponent>(
+    //     [ec_ui_txt](){
+    //         size_t size = game::get_state().get_player_army()->get_soldiers_size();
+    //         ec_ui_txt->set_text(fmt::format("Soldiers: {}", size));
+    //     },
+    //     0.5f
+    // );
+    
+    // Paint mode displayer
+    auto ui_dispMode = world->create_entity("disp-ctrl-mode");
+    auto ui_dispModeText = ui_dispMode->create_component<engine::ui_text>("<mode>", 18);
+    ui_dispModeText->screen_position(engine::math::Point(20, 50));
+    ui_dispMode->create_component<game::ClockComponent>(
+        [ui_dispModeText, armyCtrl](){
+            if(armyCtrl->is_mode_paint()) {
+                ui_dispModeText->set_text("Paint mode");
+            } else if(armyCtrl->is_mode_select_and_command()) {
+                ui_dispModeText->set_text("Select and command mode");
+            } else {
+                ui_dispModeText->set_text("Unknown mode");
+            }
         },
         0.5f
     );
