@@ -107,5 +107,7 @@ void setup_test(guaranteed_ptr<engine::world> world) {
     cam_ctrl->create_component<game::KeyCameraController>(100);
 
     auto btn = world->create_entity("btn");
-    btn->create_component<engine::ui_button>(engine::math::Rect(20, 100, 100, 50));
+    btn->create_component<engine::ui_button>(engine::math::Rect(20, 100, 100, 50))->add_action([]{
+        spdlog::info("ok ok");
+    });
 }

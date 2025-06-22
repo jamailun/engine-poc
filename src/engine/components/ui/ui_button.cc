@@ -33,14 +33,14 @@ void ui_button::render() {
     SDL_RenderFillRectF(sdl::get_renderer(), &sdl_rect);
 }
 
-void ui_button::update(float elapsed) {
+void ui_button::update(float) {
     // Only care aboutn left click.
     if( ! engine::get_inputs().is_clicking(engine::button::left)) return;
     math::Point mouse_pos = engine::get_inputs().get_mouse(engine::button::left);
     if(!_screen_bounds.contains(mouse_pos)) return;
     _last_click_time = SDL_GetTicks();
 
-    spdlog::info("Button clicked.");     
+    for(auto& c : _actions) c();
 }
 
 
