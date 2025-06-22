@@ -9,6 +9,7 @@
 #include <engine/components/text_renderer.hh>
 #include <engine/components/transform.hh>
 #include <engine/components/image_renderer.hh>
+#include <engine/components/ui/ui_text.hh>
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
@@ -23,62 +24,6 @@
 #include "game/components/paintable_region.hh"
 #include "game/configuration/args_reader.hh"
 
-#include <engine/utils/quadtree.hh>
-
-    static size_t NEXT_ID = 0;
-class Foo {
-private:
-    using Pt = engine::math::Point;
-    Pt _pos;
-    size_t _id;
-public:
-    Foo(float x, float y) : _pos(x, y), _id(NEXT_ID++) {}
-    Foo() : Foo(0, 0) {}
-
-    Pt get_pos() const {
-        return _pos;
-    }
-    void set_pos(Pt pos) {
-       _pos = pos;
-    }
-    bool operator==(const Foo& foo) {
-        return _id == foo._id;
-    }
-    size_t id() const {
-        return _id;
-    }
-};
-
-void quad() {
-    using QuadTree = engine::quad_tree<Foo>;
-
-    QuadTree root ([](const Foo& foo) { return foo.get_pos(); }, engine::math::Rect(0, 0, 64, 64), 2, 4);
-    Foo a = Foo(12, 12);
-    Foo b = Foo(12, 12);
-    Foo c = Foo(4, 4);
-    Foo d = Foo(12, 12);
-    root.insert(a);
-    root.insert(b);
-    root.insert(Foo(12, 11));
-    root.insert(c);
-    root.insert(d);
-    spdlog::info("ROOT (size={}) =\n{}", root.size(), root.to_string());
-
-
-    root.remove(a);
-    spdlog::info("ROOT (size={}) =\n{}", root.size(), root.to_string());
-
-    auto query = root.query(engine::math::Rect(1, 1, 12, 11));
-    spdlog::warn("QUERY. Found = {} elem.", query.size());
-    for(auto& foo : query) {
-        spdlog::info("Query: {}", foo.id());
-    }
-
-    root.remove(b);
-    root.remove(c);
-    root.remove(d);
-    spdlog::info("ROOT (size={}) =\n{}", root.size(), root.to_string());
-}
 
 void setup(guaranteed_ptr<engine::world> world);
 void setup_test(guaranteed_ptr<engine::world> world);
@@ -104,8 +49,8 @@ int main(int argc, char** argv) {
     }
 
     // Initialize world
-    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
-    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
+    // engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup(w);});
+    engine::get_engine().register_setup_operation([](guaranteed_ptr<engine::world> w){setup_test(w);});
 
     // Start engine
     engine::get_engine().start();
@@ -155,5 +100,11 @@ void setup_test(guaranteed_ptr<engine::world> world) {
     toto->create_component<game::KeyController>(200);
 
     auto text = world->create_entity("text");
+    text->get_transform()->set_pos(-50, -300);
     text->create_component<engine::text_renderer>("coucou !", 18);
+    auto st = text->create_component<engine::ui_text>("Text on screen.", 18);
+    st->screen_position(engine::math::Point(100, 300));
+
+    auto cam_ctrl = world->create_entity("cam_controller");
+    cam_ctrl->create_component<game::KeyCameraController>(100);
 }

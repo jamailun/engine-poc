@@ -20,5 +20,5 @@ void KeyCameraController::update(float elapsed) {
     if(inputs.is_key_pressed(SDL_SCANCODE_S))
         dy += 1;
     
-    engine::get_engine().camera().move(dx * elapsed, dy * elapsed);
+    engine::get_engine().camera().move(dx * elapsed * _speed, dy * elapsed * _speed);
 }

@@ -12,7 +12,7 @@ private:
     float _speed;
 
 public:
-    KeyCameraController(entity_ptr entity) : engine::base_component(entity), _speed(1) {}
+    KeyCameraController(entity_ptr entity) : engine::base_component(entity), _speed(10) {}
     KeyCameraController(entity_ptr entity, float speed) : engine::base_component(entity), _speed(speed) {}
     ~KeyCameraController() = default;
 
